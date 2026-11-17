@@ -164,7 +164,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
           <label className="block text-sm font-semibold text-slate-900 mb-3">
             Choose Required Service <span className="text-rose-500">*</span>
           </label>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
             {/* 1. IPE */}
             <button
               type="button"
@@ -172,31 +172,29 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 setSelectedService("IPE");
                 setIdentifierCode("");
               }}
-              className={`text-left p-4 rounded-xl border-2 transition relative flex flex-col justify-between ${
+              className={`text-left p-3 rounded-xl border-2 transition flex flex-col justify-between ${
                 selectedService === "IPE"
-                  ? "border-emerald-600 bg-emerald-50/60 shadow-sm ring-1 ring-emerald-600/30"
-                  : "border-slate-200 hover:border-slate-300 bg-slate-50/50"
+                  ? "border-emerald-600 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-600/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      selectedService === "IPE" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"
-                    }`}
-                  >
-                    <ShieldAlert className="w-4 h-4" />
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                    15 Chars
-                  </span>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    selectedService === "IPE" ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  <ShieldAlert className="w-3.5 h-3.5" />
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">IPE Clearance</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Fresh enrollment exception holds.</p>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                  15 Chars
+                </span>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Fee:</span>
-                <span className="text-xs font-bold text-slate-900">{formatCurrency(SERVICES.IPE.price)}</span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">IPE Clearance</h4>
+                <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
+                  {formatCurrency(SERVICES.IPE.price)}
+                </span>
               </div>
             </button>
 
@@ -207,31 +205,29 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 setSelectedService("MOD_IPE");
                 setIdentifierCode("");
               }}
-              className={`text-left p-4 rounded-xl border-2 transition relative flex flex-col justify-between ${
+              className={`text-left p-3 rounded-xl border-2 transition flex flex-col justify-between ${
                 selectedService === "MOD_IPE"
-                  ? "border-emerald-600 bg-emerald-50/60 shadow-sm ring-1 ring-emerald-600/30"
-                  : "border-slate-200 hover:border-slate-300 bg-slate-50/50"
+                  ? "border-emerald-600 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-600/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      selectedService === "MOD_IPE" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"
-                    }`}
-                  >
-                    <FileEdit className="w-4 h-4" />
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800">
-                    15 Chars
-                  </span>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    selectedService === "MOD_IPE" ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  <FileEdit className="w-3.5 h-3.5" />
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">Mod IPE</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Exceptions on modified profiles.</p>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-blue-100 text-blue-800">
+                  15 Chars
+                </span>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Fee:</span>
-                <span className="text-xs font-bold text-slate-900">{formatCurrency(SERVICES.MOD_IPE.price)}</span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">Mod IPE</h4>
+                <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
+                  {formatCurrency(SERVICES.MOD_IPE.price)}
+                </span>
               </div>
             </button>
 
@@ -242,31 +238,29 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 setSelectedService("VALIDATION");
                 setIdentifierCode("");
               }}
-              className={`text-left p-4 rounded-xl border-2 transition relative flex flex-col justify-between ${
+              className={`text-left p-3 rounded-xl border-2 transition flex flex-col justify-between ${
                 selectedService === "VALIDATION"
-                  ? "border-emerald-600 bg-emerald-50/60 shadow-sm ring-1 ring-emerald-600/30"
-                  : "border-slate-200 hover:border-slate-300 bg-slate-50/50"
+                  ? "border-emerald-600 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-600/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      selectedService === "VALIDATION" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"
-                    }`}
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-teal-100 text-teal-800">
-                    11 Digits
-                  </span>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    selectedService === "VALIDATION" ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  <CheckCircle2 className="w-3.5 h-3.5" />
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">NIN Validation</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Record verification & sync.</p>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-teal-100 text-teal-800">
+                  11 Digits
+                </span>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Fee:</span>
-                <span className="text-xs font-bold text-slate-900">{formatCurrency(SERVICES.VALIDATION.price)}</span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">NIN Validation</h4>
+                <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
+                  {formatCurrency(SERVICES.VALIDATION.price)}
+                </span>
               </div>
             </button>
 
@@ -277,31 +271,29 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 setSelectedService("MOD_VALIDATION");
                 setIdentifierCode("");
               }}
-              className={`text-left p-4 rounded-xl border-2 transition relative flex flex-col justify-between ${
+              className={`text-left p-3 rounded-xl border-2 transition flex flex-col justify-between ${
                 selectedService === "MOD_VALIDATION"
-                  ? "border-emerald-600 bg-emerald-50/60 shadow-sm ring-1 ring-emerald-600/30"
-                  : "border-slate-200 hover:border-slate-300 bg-slate-50/50"
+                  ? "border-emerald-600 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-600/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      selectedService === "MOD_VALIDATION" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"
-                    }`}
-                  >
-                    <RefreshCw className="w-4 h-4" />
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-100 text-purple-800">
-                    11 Digits
-                  </span>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    selectedService === "MOD_VALIDATION" ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">Mod Validation</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Post-modification record sync.</p>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-purple-100 text-purple-800">
+                  11 Digits
+                </span>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Fee:</span>
-                <span className="text-xs font-bold text-slate-900">{formatCurrency(SERVICES.MOD_VALIDATION.price)}</span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">Mod Validation</h4>
+                <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
+                  {formatCurrency(SERVICES.MOD_VALIDATION.price)}
+                </span>
               </div>
             </button>
 
@@ -312,31 +304,29 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 setSelectedService("MODIFICATION");
                 setIdentifierCode("");
               }}
-              className={`text-left p-4 rounded-xl border-2 transition relative flex flex-col justify-between sm:col-span-2 lg:col-span-2 ${
+              className={`text-left p-3 rounded-xl border-2 transition flex flex-col justify-between ${
                 selectedService === "MODIFICATION"
-                  ? "border-emerald-600 bg-emerald-50/60 shadow-sm ring-1 ring-emerald-600/30"
-                  : "border-slate-200 hover:border-slate-300 bg-slate-50/50"
+                  ? "border-emerald-600 bg-emerald-50/80 shadow-sm ring-1 ring-emerald-600/30"
+                  : "border-slate-200 hover:border-slate-300 bg-white"
               }`}
             >
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                      selectedService === "MODIFICATION" ? "bg-emerald-600 text-white" : "bg-slate-200 text-slate-700"
-                    }`}
-                  >
-                    <Sliders className="w-4 h-4" />
-                  </div>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-amber-100 text-amber-800">
-                    11 Digits
-                  </span>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div
+                  className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
+                    selectedService === "MODIFICATION" ? "bg-emerald-600 text-white" : "bg-slate-100 text-slate-700"
+                  }`}
+                >
+                  <Sliders className="w-3.5 h-3.5" />
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">NIN Modification</h4>
-                <p className="text-xs text-slate-500 mt-0.5">Request demographic corrections (Name, DOB, Phone, Address).</p>
+                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-100 text-amber-800">
+                  11 Digits
+                </span>
               </div>
-              <div className="mt-3 pt-2 border-t border-slate-200/60 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Fee:</span>
-                <span className="text-xs font-bold text-slate-900">{formatCurrency(SERVICES.MODIFICATION.price)}</span>
+              <div>
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">NIN Modification</h4>
+                <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
+                  {formatCurrency(SERVICES.MODIFICATION.price)}
+                </span>
               </div>
             </button>
           </div>

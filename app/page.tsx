@@ -120,8 +120,8 @@ export default function HomePage() {
           </p>
         </div>
 
-        {/* 5-card responsive layout: 3 on top, 2 centered on bottom */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Compact 5-card responsive grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
           <ServiceCard service={SERVICES.IPE} />
           <ServiceCard service={SERVICES.MOD_IPE} />
           <ServiceCard service={SERVICES.VALIDATION} />
