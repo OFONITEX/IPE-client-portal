@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClientLayout } from "@/components/ClientLayout";
 
+export const runtime = "edge";
+
 export const metadata: Metadata = {
   title: "Identity Services Portal | IPE, Personalization & NIN Validation",
   description:

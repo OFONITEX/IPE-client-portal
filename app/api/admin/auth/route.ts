@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const runtime = "edge";
+
 const DEFAULT_ADMIN_EMAIL = process.env.ADMIN_EMAIL || "admin@identityhub.ng";
 const DEFAULT_ADMIN_PASS = process.env.ADMIN_PASSWORD || "Admin@2026Password!";
 

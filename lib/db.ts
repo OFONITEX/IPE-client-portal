@@ -1,11 +1,5 @@
-import fs from "fs";
-import path from "path";
 import { Submission, PortalSettings } from "./types";
 import { DEFAULT_SETTINGS } from "./config";
-
-const DATA_DIR = path.join(process.cwd(), "data");
-const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
-const SETTINGS_FILE = path.join(DATA_DIR, "settings.json");
 
 // Initial Seed data covering all 5 services
 const SEED_SUBMISSIONS: Submission[] = [
@@ -58,39 +52,36 @@ const SEED_SUBMISSIONS: Submission[] = [
     identifierCode: "49281729401",
     applicantName: "Amina Yusuf Bello",
     email: "amina.bello@example.com",
-    phone: "08129876543",
+    phone: "08023456781",
     state: "Kano",
     lga: "Nassarawa",
-    additionalNotes: "NIN validation required for international passport renewal.",
-    amount: 1500,
+    additionalNotes: "Bank verification failed due to unvalidated NIN record.",
+    amount: 2500,
     paymentStatus: "PAID",
-    paymentReference: "PAY-1731778800-4421",
-    paymentChannel: "bank_transfer",
+    paymentReference: "PAY-1731772100-9941",
+    paymentChannel: "paystack",
     paidAt: new Date(Date.now() - 3600 * 1000 * 8).toISOString(),
-    status: "ACCEPTED",
-    adminAccepted: true,
-    adminAcceptedAt: new Date(Date.now() - 3600 * 1000 * 6).toISOString(),
-    adminAcceptedBy: "Admin Operator (HQ)",
-    adminNotes: "Queued for batch sync with central gateway.",
+    status: "PAID_PENDING_ACCEPTANCE",
+    adminAccepted: false,
     createdAt: new Date(Date.now() - 3600 * 1000 * 9).toISOString(),
-    updatedAt: new Date(Date.now() - 3600 * 1000 * 6).toISOString(),
+    updatedAt: new Date(Date.now() - 3600 * 1000 * 8).toISOString(),
   },
   {
     id: "sub-seed-4",
-    trackingId: "TRK-MVAL-2026-6623X1",
+    trackingId: "TRK-MVAL-2026-3391P8",
     serviceType: "MOD_VALIDATION",
-    identifierCode: "71029384619",
-    applicantName: "Grace Ngozi Eze",
-    email: "grace.eze@example.com",
-    phone: "07031122445",
+    identifierCode: "91028374619",
+    applicantName: "Ngozi Blessing Eze",
+    email: "ngozi.eze@example.com",
+    phone: "08077889900",
     state: "Enugu",
     lga: "Enugu North",
-    additionalNotes: "Post-modification validation following legal surname change.",
-    amount: 2000,
+    additionalNotes: "Name arrangement conflict between NIN portal and telecom SIM KYC.",
+    amount: 3000,
     paymentStatus: "PAID",
-    paymentReference: "PAY-1731774000-9921",
+    paymentReference: "PAY-1731768800-4491",
     paymentChannel: "paystack",
-    paidAt: new Date(Date.now() - 3600 * 1000 * 12).toISOString(),
+    paidAt: new Date(Date.now() - 3600 * 1000 * 10).toISOString(),
     status: "IN_PROGRESS",
     adminAccepted: true,
     adminAcceptedAt: new Date(Date.now() - 3600 * 1000 * 10).toISOString(),
@@ -128,42 +119,16 @@ const SEED_SUBMISSIONS: Submission[] = [
   },
 ];
 
-// Universal Memory Cache (Guarantees zero crashes on Cloudflare Pages / Edge runtimes)
+// Pure in-memory cache with zero Node.js/fs dependencies (100% Edge runtime compatible)
 let memorySubmissions: Submission[] = [...SEED_SUBMISSIONS];
 let memorySettings: PortalSettings = { ...DEFAULT_SETTINGS };
 
-function ensureDirectoryExists() {
-  try {
-    if (!fs.existsSync(DATA_DIR)) {
-      fs.mkdirSync(DATA_DIR, { recursive: true });
-    }
-  } catch {}
-}
-
 export function getSubmissions(): Submission[] {
-  try {
-    ensureDirectoryExists();
-    if (!fs.existsSync(SUBMISSIONS_FILE)) {
-      try {
-        fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(SEED_SUBMISSIONS, null, 2));
-      } catch {}
-      return memorySubmissions;
-    }
-    const raw = fs.readFileSync(SUBMISSIONS_FILE, "utf-8");
-    const parsed = JSON.parse(raw);
-    memorySubmissions = parsed;
-    return parsed;
-  } catch (err) {
-    return memorySubmissions;
-  }
+  return memorySubmissions;
 }
 
 export function saveSubmissions(submissions: Submission[]): void {
   memorySubmissions = submissions;
-  try {
-    ensureDirectoryExists();
-    fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
-  } catch {}
 }
 
 export function getSubmissionById(idOrTracking: string): Submission | undefined {
@@ -197,30 +162,10 @@ export function updateSubmission(id: string, updates: Partial<Submission>): Subm
 }
 
 export function getSettings(): PortalSettings {
-  try {
-    ensureDirectoryExists();
-    if (!fs.existsSync(SETTINGS_FILE)) {
-      try {
-        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2));
-      } catch {}
-      return memorySettings;
-    }
-    const raw = fs.readFileSync(SETTINGS_FILE, "utf-8");
-    const parsed = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
-    memorySettings = parsed;
-    return parsed;
-  } catch {
-    return memorySettings;
-  }
+  return memorySettings;
 }
 
-export function saveSettings(settings: Partial<PortalSettings>): PortalSettings {
-  const current = getSettings();
-  const updated = { ...current, ...settings };
-  memorySettings = updated;
-  try {
-    ensureDirectoryExists();
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2));
-  } catch {}
-  return updated;
+export function saveSettings(settings: PortalSettings): PortalSettings {
+  memorySettings = { ...settings };
+  return memorySettings;
 }

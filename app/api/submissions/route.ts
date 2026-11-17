@@ -3,6 +3,8 @@ import { getSubmissions, createSubmission, getSettings } from "@/lib/db";
 import { generateTrackingId, validateServiceCode } from "@/lib/utils";
 import { Submission, ServiceType } from "@/lib/types";
 
+export const runtime = "edge";
+
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);

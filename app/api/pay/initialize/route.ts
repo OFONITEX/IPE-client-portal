@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSubmissionById, getSettings, updateSubmission } from "@/lib/db";
 import { generatePaymentReference } from "@/lib/utils";
 
+export const runtime = "edge";
+
 export async function POST(request: NextRequest) {
   try {
     const { submissionId, channel } = await request.json();

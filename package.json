@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
+    "build": "npx @cloudflare/next-on-pages",
+    "build:next": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
-    "pages:build": "npx @cloudflare/next-on-pages@1.13.7"
+    "pages:build": "npx @cloudflare/next-on-pages"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",

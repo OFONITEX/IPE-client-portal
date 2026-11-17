@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getSubmissionById, updateSubmission } from "@/lib/db";
 import { SubmissionStatus } from "@/lib/types";
 
+export const runtime = "edge";
+
 export async function GET(
   request: NextRequest,
   { params }: { params: { id: string } }
