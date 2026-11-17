@@ -7,12 +7,6 @@ const DATA_DIR = path.join(process.cwd(), "data");
 const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
 const SETTINGS_FILE = path.join(DATA_DIR, "settings.json");
 
-function ensureDirectoryExists() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
-
 // Initial Seed data covering all 5 services
 const SEED_SUBMISSIONS: Submission[] = [
   {
@@ -134,24 +128,42 @@ const SEED_SUBMISSIONS: Submission[] = [
   },
 ];
 
-export function getSubmissions(): Submission[] {
-  ensureDirectoryExists();
-  if (!fs.existsSync(SUBMISSIONS_FILE)) {
-    fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(SEED_SUBMISSIONS, null, 2));
-    return SEED_SUBMISSIONS;
-  }
+// Universal Memory Cache (Guarantees zero crashes on Cloudflare Pages / Edge runtimes)
+let memorySubmissions: Submission[] = [...SEED_SUBMISSIONS];
+let memorySettings: PortalSettings = { ...DEFAULT_SETTINGS };
+
+function ensureDirectoryExists() {
   try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
+    }
+  } catch {}
+}
+
+export function getSubmissions(): Submission[] {
+  try {
+    ensureDirectoryExists();
+    if (!fs.existsSync(SUBMISSIONS_FILE)) {
+      try {
+        fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(SEED_SUBMISSIONS, null, 2));
+      } catch {}
+      return memorySubmissions;
+    }
     const raw = fs.readFileSync(SUBMISSIONS_FILE, "utf-8");
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    memorySubmissions = parsed;
+    return parsed;
   } catch (err) {
-    console.error("Error reading submissions:", err);
-    return [];
+    return memorySubmissions;
   }
 }
 
 export function saveSubmissions(submissions: Submission[]): void {
-  ensureDirectoryExists();
-  fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
+  memorySubmissions = submissions;
+  try {
+    ensureDirectoryExists();
+    fs.writeFileSync(SUBMISSIONS_FILE, JSON.stringify(submissions, null, 2));
+  } catch {}
 }
 
 export function getSubmissionById(idOrTracking: string): Submission | undefined {
@@ -185,23 +197,30 @@ export function updateSubmission(id: string, updates: Partial<Submission>): Subm
 }
 
 export function getSettings(): PortalSettings {
-  ensureDirectoryExists();
-  if (!fs.existsSync(SETTINGS_FILE)) {
-    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2));
-    return DEFAULT_SETTINGS;
-  }
   try {
+    ensureDirectoryExists();
+    if (!fs.existsSync(SETTINGS_FILE)) {
+      try {
+        fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+      } catch {}
+      return memorySettings;
+    }
     const raw = fs.readFileSync(SETTINGS_FILE, "utf-8");
-    return { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    const parsed = { ...DEFAULT_SETTINGS, ...JSON.parse(raw) };
+    memorySettings = parsed;
+    return parsed;
   } catch {
-    return DEFAULT_SETTINGS;
+    return memorySettings;
   }
 }
 
 export function saveSettings(settings: Partial<PortalSettings>): PortalSettings {
-  ensureDirectoryExists();
   const current = getSettings();
   const updated = { ...current, ...settings };
-  fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2));
+  memorySettings = updated;
+  try {
+    ensureDirectoryExists();
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(updated, null, 2));
+  } catch {}
   return updated;
 }
