@@ -1,0 +1,22 @@
+{
+  "portalName": "SecureID Services Portal",
+  "portalTagline": "Official Portal for IPE, Mod IPE, Validation, Mod Validation & Modifications",
+  "supportEmail": "support@secureidportal.ng",
+  "supportPhone": "+234 (0) 800 433 6848",
+  "supportWhatsApp": "+2348004336848",
+  "currency": "NGN",
+  "currencySymbol": "₦",
+  "rates": {
+    "ipe": 4500,
+    "modIpe": 5000,
+    "validation": 1500,
+    "modValidation": 2000,
+    "modification": 3500
+  },
+  "paystack": {
+    "enabled": true,
+    "publicKey": "pk_test_sample_key_identity_portal",
+    "secretKey": "sk_test_sample_secret_identity_portal",
+    "testMode": true
+  }
+}
