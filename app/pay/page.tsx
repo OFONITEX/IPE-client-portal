@@ -1,21 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import { Submission } from "@/lib/types";
-import { formatCurrency, formatDate } from "@/lib/utils";
-import confetti from "canvas-confetti";
+import { formatCurrency } from "@/lib/utils";
 import {
-  ShieldCheck,
   CreditCard,
   Lock,
-  ArrowRight,
   CheckCircle2,
   AlertCircle,
   Loader2,
   Sparkles,
-  Building,
-  Smartphone,
   ChevronRight,
 } from "lucide-react";
 
@@ -25,10 +20,10 @@ declare global {
   }
 }
 
-export default function PaymentPage() {
-  const params = useParams();
+function PaymentContent() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const submissionId = params.id as string;
+  const submissionId = searchParams.get("id") || "";
 
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [loading, setLoading] = useState(true);
@@ -37,22 +32,25 @@ export default function PaymentPage() {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   useEffect(() => {
-    fetchSubmission();
+    if (submissionId) {
+      fetchSubmission();
+    } else {
+      setLoading(false);
+    }
   }, [submissionId]);
 
   const fetchSubmission = async () => {
     try {
       const res = await fetch(`/api/submissions/${submissionId}`);
-      const data = await res.json();
+      const data: any = await res.json();
       if (!res.ok || !data.success) {
         throw new Error(data.message || "Submission not found");
       }
 
       setSubmission(data.data);
 
-      // If already paid, redirect straight to success page
       if (data.data.paymentStatus === "PAID") {
-        router.push(`/success/${data.data.id}`);
+        router.push(`/success?id=${data.data.id}`);
       }
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to load submission");
@@ -67,20 +65,18 @@ export default function PaymentPage() {
     setErrorMsg("");
 
     try {
-      // 1. Initialize with backend
       const initRes = await fetch("/api/pay/initialize", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ submissionId: submission.id }),
       });
-      const initData = await initRes.json();
+      const initData: any = await initRes.json();
       if (!initRes.ok || !initData.success) {
         throw new Error(initData.message || "Failed to initialize payment gateway");
       }
 
       const { reference, amountInKobo, email, publicKey } = initData.data;
 
-      // Check if Paystack script is ready
       if (typeof window !== "undefined" && window.PaystackPop) {
         const handler = window.PaystackPop.setup({
           key: publicKey,
@@ -95,8 +91,7 @@ export default function PaymentPage() {
               { display_name: "Tracking ID", variable_name: "tracking_id", value: submission.trackingId },
             ],
           },
-          callback: async function (response: any) {
-            // Verify with backend
+          callback: async function () {
             await verifyPayment(reference, "paystack");
           },
           onClose: function () {
@@ -105,7 +100,6 @@ export default function PaymentPage() {
         });
         handler.openIframe();
       } else {
-        // If Paystack inline JS is unavailable (e.g. offline or adblocker), fallback to instant test verify
         await handleInstantSimulatedPayment();
       }
     } catch (err: any) {
@@ -136,13 +130,14 @@ export default function PaymentPage() {
         }),
       });
 
-      const verifyData = await verifyRes.json();
+      const verifyData: any = await verifyRes.json();
       if (!verifyRes.ok || !verifyData.success) {
         throw new Error(verifyData.message || "Payment verification failed");
       }
 
       setPaymentSuccess(true);
       try {
+        const confetti = (await import("canvas-confetti")).default;
         confetti({
           particleCount: 100,
           spread: 70,
@@ -151,7 +146,7 @@ export default function PaymentPage() {
       } catch {}
 
       setTimeout(() => {
-        router.push(`/success/${submission!.id}`);
+        router.push(`/success?id=${submission!.id}`);
       }, 1500);
     } catch (err: any) {
       setErrorMsg(err.message || "Failed to confirm payment with backend");
@@ -193,7 +188,6 @@ export default function PaymentPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-12 sm:py-16">
       <div className="max-w-2xl mx-auto px-4 sm:px-6">
-        {/* Step indicator */}
         <div className="text-center mb-8 space-y-1">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800">
             <Lock className="w-3 h-3" />
@@ -222,7 +216,6 @@ export default function PaymentPage() {
           </div>
         ) : (
           <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden space-y-6 p-6 sm:p-8">
-            {/* Order Summary Card */}
             <div className="bg-slate-900 text-white rounded-xl p-6 space-y-4">
               <div className="flex items-center justify-between text-xs border-b border-slate-800 pb-3">
                 <span className="text-slate-400">Tracking Reference:</span>
@@ -252,7 +245,6 @@ export default function PaymentPage() {
                 </div>
               </div>
 
-              {/* Identifier Display */}
               <div className="bg-slate-800/80 rounded-lg p-3 flex items-center justify-between text-xs">
                 <span className="text-slate-300">
                   {submission.serviceType === "IPE" || submission.serviceType === "MOD_IPE"
@@ -265,7 +257,6 @@ export default function PaymentPage() {
               </div>
             </div>
 
-            {/* Applicant Details Review */}
             <div className="space-y-2 border-b border-slate-200 pb-4 text-xs sm:text-sm text-slate-600">
               <div className="flex justify-between">
                 <span className="text-slate-400">Applicant:</span>
@@ -281,7 +272,6 @@ export default function PaymentPage() {
               </div>
             </div>
 
-            {/* Error banner */}
             {errorMsg && (
               <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-sm flex items-start gap-2.5">
                 <AlertCircle className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
@@ -289,13 +279,11 @@ export default function PaymentPage() {
               </div>
             )}
 
-            {/* Payment Options */}
             <div className="space-y-4">
               <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
                 Select Payment Method
               </h3>
 
-              {/* Paystack Primary Button */}
               <button
                 type="button"
                 disabled={processing}
@@ -322,7 +310,6 @@ export default function PaymentPage() {
                 )}
               </button>
 
-              {/* Instant Test Mode Simulation Button */}
               <div className="pt-2">
                 <button
                   type="button"
@@ -339,7 +326,6 @@ export default function PaymentPage() {
               </div>
             </div>
 
-            {/* Trust Footer */}
             <div className="pt-4 border-t border-slate-200 flex items-center justify-center gap-2 text-xs text-slate-400">
               <Lock className="w-3.5 h-3.5 text-emerald-600" />
               <span>TLS 1.3 Certified • Verified Payment Gateway</span>
@@ -351,3 +337,16 @@ export default function PaymentPage() {
   );
 }
 
+export default function PaymentPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+        </div>
+      }
+    >
+      <PaymentContent />
+    </Suspense>
+  );
+}

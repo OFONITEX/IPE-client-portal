@@ -1,22 +1,18 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSubmissionById, getSubmissions } from "@/lib/db";
+import { getSubmissionById, getSubmissions } from "../../lib/db";
 
-export const runtime = "edge";
-
-export async function GET(request: NextRequest) {
+export const onRequestGet = async (context: any) => {
   try {
-    const { searchParams } = new URL(request.url);
-    const query = searchParams.get("q");
+    const url = new URL(context.request.url);
+    const query = url.searchParams.get("q");
 
     if (!query) {
-      return NextResponse.json({ success: false, message: "Query parameter 'q' is required" }, { status: 400 });
+      return Response.json({ success: false, message: "Query parameter 'q' is required" }, { status: 400 });
     }
 
     const clean = query.trim().toUpperCase();
     const submission = getSubmissionById(clean);
 
     if (!submission) {
-      // Also attempt partial match on phone or email
       const all = getSubmissions();
       const match = all.find(
         (s) =>
@@ -26,22 +22,21 @@ export async function GET(request: NextRequest) {
       );
 
       if (!match) {
-        return NextResponse.json(
+        return Response.json(
           { success: false, message: "No application found matching this reference code." },
           { status: 404 }
         );
       }
 
-      return NextResponse.json({ success: true, data: maskSensitive(match) });
+      return Response.json({ success: true, data: maskSensitive(match) });
     }
 
-    return NextResponse.json({ success: true, data: maskSensitive(submission) });
+    return Response.json({ success: true, data: maskSensitive(submission) });
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return Response.json({ success: false, message: error.message }, { status: 500 });
   }
-}
+};
 
-// Mask sensitive information for public tracking
 function maskSensitive(submission: any) {
   const maskedName = submission.applicantName
     ? submission.applicantName
@@ -52,7 +47,6 @@ function maskSensitive(submission: any) {
 
   let maskedCode = submission.identifierCode;
   if (maskedCode.length === 11) {
-    // 11 digit NIN: 123****7890
     maskedCode = maskedCode.substring(0, 3) + "****" + maskedCode.substring(7);
   } else if (maskedCode.length === 15) {
     maskedCode = maskedCode.substring(0, 4) + "******" + maskedCode.substring(10);
@@ -65,4 +59,3 @@ function maskSensitive(submission: any) {
     email: submission.email ? submission.email.replace(/(.{2})(.*)(?=@)/, "$1***") : "",
   };
 }
-

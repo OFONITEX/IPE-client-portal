@@ -113,7 +113,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
       }
 
       // Redirect directly to the secure checkout / payment page for this submission
-      router.push(`/pay/${data.data.id}`);
+      router.push(`/pay?id=${data.data.id}`);
     } catch (err: any) {
       setErrorMsg(err.message || "An unexpected error occurred. Please try again.");
       setSubmitting(false);

@@ -1,26 +1,22 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSubmissionById, getSettings, updateSubmission } from "@/lib/db";
-import { generatePaymentReference } from "@/lib/utils";
+import { getSubmissionById, getSettings, updateSubmission } from "../../../lib/db";
+import { generatePaymentReference } from "../../../lib/utils";
 
-export const runtime = "edge";
-
-export async function POST(request: NextRequest) {
+export const onRequestPost = async (context: any) => {
   try {
-    const { submissionId, channel } = await request.json();
+    const { submissionId } = (await context.request.json()) as any;
 
     if (!submissionId) {
-      return NextResponse.json({ success: false, message: "submissionId is required" }, { status: 400 });
+      return Response.json({ success: false, message: "submissionId is required" }, { status: 400 });
     }
 
     const submission = getSubmissionById(submissionId);
     if (!submission) {
-      return NextResponse.json({ success: false, message: "Submission not found" }, { status: 404 });
+      return Response.json({ success: false, message: "Submission not found" }, { status: 404 });
     }
 
     const settings = getSettings();
     const reference = generatePaymentReference();
 
-    // Store the reference on the submission
     updateSubmission(submission.id, {
       paymentReference: reference,
     });
@@ -28,8 +24,7 @@ export async function POST(request: NextRequest) {
     const amountInKobo = submission.amount * 100;
     const publicKey = settings.paystack.publicKey || "pk_test_sample_key_identity_portal";
 
-    // Build response for both Paystack Inline and Instant Test Checkout
-    return NextResponse.json({
+    return Response.json({
       success: true,
       data: {
         reference,
@@ -45,7 +40,7 @@ export async function POST(request: NextRequest) {
       },
     });
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return Response.json({ success: false, message: error.message }, { status: 500 });
   }
-}
+};
 

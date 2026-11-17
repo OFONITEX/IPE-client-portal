@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import React, { useEffect, useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Submission } from "@/lib/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -13,32 +13,30 @@ import {
   Copy,
   Check,
   Shield,
-  Clock,
   ArrowRight,
-  ShieldCheck,
-  FileText,
-  User,
-  Mail,
-  Phone,
+  Loader2,
 } from "lucide-react";
 
-export default function SuccessPage() {
-  const params = useParams();
-  const router = useRouter();
-  const submissionId = params.id as string;
+function SuccessContent() {
+  const searchParams = useSearchParams();
+  const submissionId = searchParams.get("id") || "";
 
   const [submission, setSubmission] = useState<Submission | null>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    fetchSubmission();
+    if (submissionId) {
+      fetchSubmission();
+    } else {
+      setLoading(false);
+    }
   }, [submissionId]);
 
   const fetchSubmission = async () => {
     try {
       const res = await fetch(`/api/submissions/${submissionId}`);
-      const data = await res.json();
+      const data: any = await res.json();
       if (res.ok && data.success) {
         setSubmission(data.data);
       }
@@ -62,7 +60,10 @@ export default function SuccessPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <p className="text-sm text-slate-500">Generating transaction receipt...</p>
+        <div className="flex flex-col items-center gap-2">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+          <p className="text-sm text-slate-500">Generating transaction receipt...</p>
+        </div>
       </div>
     );
   }
@@ -83,7 +84,6 @@ export default function SuccessPage() {
   return (
     <div className="min-h-screen bg-slate-50 py-12 sm:py-16">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-8">
-        {/* Success Banner */}
         <div className="bg-emerald-600 rounded-3xl p-8 text-white shadow-xl flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left print:hidden">
           <div className="w-16 h-16 rounded-2xl bg-white/20 flex items-center justify-center shrink-0">
             <CheckCircle2 className="w-10 h-10 text-white" />
@@ -102,7 +102,6 @@ export default function SuccessPage() {
           </div>
         </div>
 
-        {/* Tracking ID Bar */}
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
           <div>
             <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
@@ -140,9 +139,7 @@ export default function SuccessPage() {
           </div>
         </div>
 
-        {/* Official Printable Receipt Card */}
         <div className="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden p-8 sm:p-10 space-y-8 print:p-0 print:border-none print:shadow-none">
-          {/* Header */}
           <div className="flex items-center justify-between border-b border-slate-200 pb-6">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
@@ -159,7 +156,6 @@ export default function SuccessPage() {
             </div>
           </div>
 
-          {/* Details Table */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-sm">
             <div className="space-y-3">
               <h3 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
@@ -206,7 +202,6 @@ export default function SuccessPage() {
             </div>
           </div>
 
-          {/* Financial summary */}
           <div className="bg-slate-50 rounded-2xl p-5 border border-slate-200/80 space-y-3">
             <div className="flex justify-between text-sm">
               <span className="text-slate-600">Payment Reference:</span>
@@ -232,7 +227,6 @@ export default function SuccessPage() {
             </div>
           </div>
 
-          {/* Next steps notice */}
           <div className="text-xs text-slate-500 leading-relaxed border-t border-slate-200 pt-4 space-y-1">
             <p className="font-bold text-slate-700">Next Steps & Processing Information:</p>
             <p>
@@ -248,7 +242,6 @@ export default function SuccessPage() {
             </p>
           </div>
 
-          {/* Printable Action Buttons */}
           <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-4 print:hidden">
             <button
               onClick={handlePrint}
@@ -272,3 +265,16 @@ export default function SuccessPage() {
   );
 }
 
+export default function SuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen flex items-center justify-center bg-slate-50">
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+        </div>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
+  );
+}

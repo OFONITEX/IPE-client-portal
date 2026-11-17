@@ -1,16 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSubmissions, createSubmission, getSettings } from "@/lib/db";
-import { generateTrackingId, validateServiceCode } from "@/lib/utils";
-import { Submission, ServiceType } from "@/lib/types";
+import { getSubmissions, createSubmission, getSettings } from "../../../lib/db";
+import { generateTrackingId, validateServiceCode } from "../../../lib/utils";
+import { Submission, ServiceType } from "../../../lib/types";
 
-export const runtime = "edge";
-
-export async function GET(request: NextRequest) {
+export const onRequestGet = async (context: any) => {
   try {
-    const { searchParams } = new URL(request.url);
-    const service = searchParams.get("service");
-    const status = searchParams.get("status");
-    const search = searchParams.get("search");
+    const url = new URL(context.request.url);
+    const service = url.searchParams.get("service");
+    const status = url.searchParams.get("status");
+    const search = url.searchParams.get("search");
 
     let items = getSubmissions();
 
@@ -32,15 +29,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json({ success: true, count: items.length, data: items });
+    return Response.json({ success: true, count: items.length, data: items });
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return Response.json({ success: false, message: error.message }, { status: 500 });
   }
-}
+};
 
-export async function POST(request: NextRequest) {
+export const onRequestPost = async (context: any) => {
   try {
-    const body = await request.json();
+    const body: any = await context.request.json();
     const {
       serviceType,
       identifierCode,
@@ -53,9 +50,8 @@ export async function POST(request: NextRequest) {
       additionalNotes,
     } = body;
 
-    // Basic required check
     if (!serviceType || !identifierCode || !applicantName || !email || !phone) {
-      return NextResponse.json(
+      return Response.json(
         { success: false, message: "Missing required fields (serviceType, identifierCode, name, email, phone)." },
         { status: 400 }
       );
@@ -63,7 +59,7 @@ export async function POST(request: NextRequest) {
 
     const validServices: ServiceType[] = ["IPE", "MOD_IPE", "VALIDATION", "MOD_VALIDATION", "MODIFICATION"];
     if (!validServices.includes(serviceType)) {
-      return NextResponse.json(
+      return Response.json(
         {
           success: false,
           message: "Invalid service type. Must be IPE, MOD_IPE, VALIDATION, MOD_VALIDATION, or MODIFICATION.",
@@ -72,10 +68,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Validate the service-specific code (15 chars for IPE & Mod IPE; 11 digits for Validation, Mod Validation, Modification)
     const validationResult = validateServiceCode(serviceType, identifierCode);
     if (!validationResult.isValid) {
-      return NextResponse.json(
+      return Response.json(
         { success: false, message: validationResult.message },
         { status: 422 }
       );
@@ -111,8 +106,9 @@ export async function POST(request: NextRequest) {
     };
 
     const created = createSubmission(newSubmission);
-    return NextResponse.json({ success: true, data: created }, { status: 201 });
+    return Response.json({ success: true, data: created }, { status: 201 });
   } catch (error: any) {
-    return NextResponse.json({ success: false, message: error.message }, { status: 500 });
+    return Response.json({ success: false, message: error.message }, { status: 500 });
   }
-}
+};
+

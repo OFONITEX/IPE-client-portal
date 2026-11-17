@@ -1,0 +1,2 @@
+/pay/:id /pay/?id=:id 301
+/success/:id /success/?id=:id 301
