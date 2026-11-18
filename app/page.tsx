@@ -42,7 +42,7 @@ export default function HomePage() {
             {/* Top pill badge */}
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs sm:text-sm font-semibold">
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Certified National Identity Submission Portal</span>
+              <span>instantipesubmit.com.ng • National Identity Clearance Portal</span>
             </div>
 
             {/* Main title */}
@@ -53,7 +53,7 @@ export default function HomePage() {
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
               Submit your 15-character IPE / Mod IPE exception clearance, 11-digit NIN Validation, Mod Validation, or
-              Data Modification request with instant secure payment and administrative review.
+              Data Modification on <strong className="text-emerald-300 font-mono">instantipesubmit.com.ng</strong> with instant secure payment and administrative review.
             </p>
 
             {/* Hero CTAs */}

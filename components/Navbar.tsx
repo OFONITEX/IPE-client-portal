@@ -16,7 +16,9 @@ export function Navbar() {
         <div className="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span className="font-medium text-slate-200">Official Identity Clearance & Validation Portal</span>
+            <span className="font-semibold text-emerald-400">instantipesubmit.com.ng</span>
+            <span className="text-slate-600">•</span>
+            <span className="font-medium text-slate-200">Official National Identity Clearance Portal</span>
             <span className="hidden sm:inline text-slate-400">• Standardized 256-Bit SSL Encrypted</span>
           </div>
           <div className="flex items-center gap-4 text-slate-300">
@@ -38,19 +40,21 @@ export function Navbar() {
       {/* Main navigation */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition">
-            <Shield className="w-6 h-6" />
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition shrink-0">
+            <Shield className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-lg text-slate-900 tracking-tight">IdentityHub</span>
-              <span className="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800">
-                Portal
+              <span className="font-black text-lg text-slate-900 tracking-tight flex items-center">
+                InstantIPE<span className="text-emerald-600">Submit</span>
+              </span>
+              <span className="text-[10px] font-bold tracking-wider px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 font-mono">
+                .com.ng
               </span>
             </div>
-            <p className="text-xs text-slate-500 hidden sm:block">
-              IPE • Mod IPE • Validation • Mod Validation • Modification
+            <p className="text-[11px] text-slate-500 hidden sm:block font-medium">
+              instantipesubmit.com.ng • Fast-Track Identity Clearance
             </p>
           </div>
         </Link>

@@ -77,9 +77,9 @@ export const SERVICES: Record<string, ServiceConfig> = {
 };
 
 export const DEFAULT_SETTINGS: PortalSettings = {
-  portalName: "SecureID Services Portal",
-  portalTagline: "Official Portal for IPE, Mod IPE, Validation, Mod Validation & Modifications",
-  supportEmail: "support@secureidportal.ng",
+  portalName: "InstantIPESubmit",
+  portalTagline: "instantipesubmit.com.ng • Fast-Track IPE, Mod IPE, Validation, Mod Validation & Modifications",
+  supportEmail: "support@instantipesubmit.com.ng",
   supportPhone: "+234 (0) 800 433 6848",
   supportWhatsApp: "+2348004336848",
   currency: "NGN",

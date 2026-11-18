@@ -146,8 +146,10 @@ function SuccessContent() {
                 <Shield className="w-6 h-6" />
               </div>
               <div>
-                <h2 className="text-lg font-bold text-slate-900">IdentityHub Clearance Services</h2>
-                <p className="text-xs text-slate-500">Official Electronic Payment & Submission Slip</p>
+                <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                  InstantIPE<span className="text-emerald-600">Submit</span>
+                </h2>
+                <p className="text-xs font-mono text-emerald-700">instantipesubmit.com.ng</p>
               </div>
             </div>
             <div className="text-right">

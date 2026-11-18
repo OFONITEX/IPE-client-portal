@@ -142,7 +142,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2">
-              Step 1 of 2 • Submission Details
+              instantipesubmit.com.ng • Step 1 of 2
             </span>
             <h2 className="text-2xl font-bold tracking-tight">Identity Services Submission Form</h2>
             <p className="text-slate-300 text-sm mt-1">

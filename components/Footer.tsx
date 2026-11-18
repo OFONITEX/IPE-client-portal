@@ -13,7 +13,10 @@ export function Footer() {
               <div className="w-9 h-9 rounded-lg bg-emerald-600 flex items-center justify-center text-white font-bold">
                 <Shield className="w-5 h-5" />
               </div>
-              <span className="text-xl font-bold text-white tracking-tight">IdentityHub</span>
+              <div>
+                <span className="text-xl font-black text-white tracking-tight">InstantIPE<span className="text-emerald-400">Submit</span></span>
+                <span className="block text-[11px] font-mono text-emerald-400">instantipesubmit.com.ng</span>
+              </div>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
               Unified digital clearinghouse for IPE, Mod IPE, Validation, Mod Validation, and NIN Modification submissions.
@@ -89,7 +92,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>support@secureidportal.ng</span>
+                <span>support@instantipesubmit.com.ng</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <MapPin className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
@@ -109,7 +112,7 @@ export function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
-          <p>© {new Date().getFullYear()} IdentityHub Services Portal. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} instantipesubmit.com.ng. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-slate-400">Privacy Policy</a>
             <a href="#" className="hover:text-slate-400">Terms of Service</a>

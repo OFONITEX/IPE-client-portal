@@ -1,4 +1,5 @@
-const DEFAULT_ADMIN_EMAIL = "admin@identityhub.ng";
+const DEFAULT_ADMIN_EMAIL = "admin@instantipesubmit.com.ng";
+const FALLBACK_ADMIN_EMAIL = "admin@identityhub.ng";
 const DEFAULT_ADMIN_PASS = "Admin@2026Password!";
 
 export const onRequestPost = async (context: any) => {
@@ -9,10 +10,12 @@ export const onRequestPost = async (context: any) => {
       return Response.json({ success: false, message: "Email and password are required" }, { status: 400 });
     }
 
-    if (
-      email.trim().toLowerCase() === DEFAULT_ADMIN_EMAIL.toLowerCase() &&
-      password === DEFAULT_ADMIN_PASS
-    ) {
+    const inputEmail = email.trim().toLowerCase();
+    const isValidEmail =
+      inputEmail === DEFAULT_ADMIN_EMAIL.toLowerCase() ||
+      inputEmail === FALLBACK_ADMIN_EMAIL.toLowerCase();
+
+    if (isValidEmail && password === DEFAULT_ADMIN_PASS) {
       const response = Response.json({
         success: true,
         message: "Authentication successful",

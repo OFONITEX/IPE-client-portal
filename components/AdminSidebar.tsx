@@ -62,9 +62,9 @@ export function AdminSidebar({ pendingAcceptanceCount = 0 }: Props) {
             <Shield className="w-5 h-5" />
           </div>
           <div>
-            <span className="font-bold text-white text-base tracking-tight block">Admin Portal</span>
-            <span className="text-[10px] text-emerald-400 font-medium uppercase tracking-wider">
-              Control Panel
+            <span className="font-bold text-white text-sm tracking-tight block">InstantIPESubmit</span>
+            <span className="text-[10px] text-emerald-400 font-mono tracking-wider">
+              instantipesubmit.com.ng
             </span>
           </div>
         </div>

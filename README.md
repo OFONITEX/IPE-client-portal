@@ -1,6 +1,6 @@
-# Identity Services Portal (IPE, Mod IPE, Validation, Mod Validation & Modification)
+# InstantIPESubmit (`instantipesubmit.com.ng`)
 
-A full-stack, enterprise-grade Next.js web application for managing identity clearances, exception holds, and national identity number (NIN) verification & modification submissions.
+A full-stack, enterprise-grade Next.js web application for managing identity clearances, exception holds, and national identity number (NIN) verification & modification submissions on **instantipesubmit.com.ng**.
 
 Includes a **public submission & tracking portal** with integrated payment gateway (Paystack & instant simulation) and a **custom admin backoffice** where administrators review, accept, and process applications after payment confirmation.
 
@@ -18,54 +18,29 @@ Includes a **public submission & tracking portal** with integrated payment gatew
 
 ---
 
-## ☁️ Step-by-Step Cloudflare Hosting Guide
+## 🌐 Custom Domain Setup (`instantipesubmit.com.ng`)
 
-### Step 1: Deploy on Cloudflare Pages (Free & Global Edge)
+To link **`instantipesubmit.com.ng`** to your Cloudflare Pages portal:
 
-1. Log into your **[Cloudflare Dashboard](https://dash.cloudflare.com/)**.
-2. Go to **Workers & Pages** ➔ Click **Create application** ➔ Select the **Pages** tab.
-3. Click **Connect to Git** and choose your repository: **`OFONITEX/IPE-client-portal`**.
-4. Configure the **Build Settings**:
-   * **Framework preset**: `Next.js`
-   * **Build command**: `npx @cloudflare/next-on-pages`
-   * **Build output directory**: `.vercel/output/static`
-   * **Root directory**: `/`
-5. In **Environment variables (Advanced)**, add:
-   * `NODE_VERSION`: `20`
-   * `NEXT_PUBLIC_APP_URL`: `https://your-custom-domain.com` *(or your default `*.pages.dev` URL)*
-   * `ADMIN_EMAIL`: `admin@identityhub.ng`
-   * `ADMIN_PASSWORD`: `Admin@2026Password!`
-   * `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY`: `pk_test_sample_key_identity_portal`
-   * `PAYSTACK_SECRET_KEY`: `sk_test_sample_secret_identity_portal`
-6. In **Settings > Functions > Compatibility Flags**, ensure:
-   * **Compatibility flag**: `nodejs_compat`
-   * **Compatibility date**: `2024-09-23` (or latest)
-7. Click **Save and Deploy**. Cloudflare will build your site across 300+ global data centers and give you a free live URL (e.g. `ipe-client-portal.pages.dev`).
+### In Cloudflare Pages Dashboard:
+1. Go to your Pages project: **`ipe-client-portal`**
+2. Click the **Custom domains** tab.
+3. Click **Set up a custom domain**.
+4. Enter **`instantipesubmit.com.ng`** (and optionally **`www.instantipesubmit.com.ng`**).
+5. Click **Continue**.
 
----
+### In your Domain Registrar DNS (where you registered `.com.ng`):
+If your DNS is managed at your domain registrar (e.g., Whogohost, Upperlink, Web4Africa, Truehost, etc.):
+- Add a **CNAME record**:
+  - **Type**: `CNAME`
+  - **Name / Host**: `@` (or `instantipesubmit.com.ng`)
+  - **Target / Value**: `ipe-client-portal.pages.dev`
+- For the `www` subdomain:
+  - **Type**: `CNAME`
+  - **Name / Host**: `www`
+  - **Target / Value**: `ipe-client-portal.pages.dev`
 
-### Step 2: Connecting a Custom Domain Bought on Another Platform
-
-If you purchase your domain from **Namecheap, GoDaddy, Whogohost, Porkbun, Squarespace**, etc., you have two easy ways to attach it:
-
-#### Method A: Direct CNAME Setup (Quickest)
-1. In Cloudflare Pages, go to your project (`ipe-client-portal`) ➔ Click the **Custom domains** tab.
-2. Click **Set up a custom domain**.
-3. Type your domain (e.g. `portal.yourdomain.com` or `yourdomain.com`).
-4. Cloudflare will give you a CNAME target: `ipe-client-portal.pages.dev`.
-5. Go to your domain provider's DNS management console and add:
-   * **Type**: `CNAME`
-   * **Host / Name**: `@` (or `portal` for subdomain)
-   * **Value / Target**: `ipe-client-portal.pages.dev`
-   * **TTL**: Automatic (or 3600)
-6. Cloudflare automatically generates and provisions a free **SSL Certificate**.
-
-#### Method B: Full Cloudflare DNS (Best Performance & DDoS Protection)
-1. In Cloudflare, click **Add Site** in the top navigation and enter your domain name.
-2. Select the **Free plan**.
-3. Cloudflare will scan your existing records and provide two Cloudflare Nameservers (e.g. `ns1.cloudflare.com`, `ns2.cloudflare.com`).
-4. Log into where you bought your domain ➔ Find **Nameservers / DNS Settings** ➔ Change from "Default Nameservers" to **Custom Nameservers** and paste the Cloudflare ones.
-5. In your Cloudflare Pages project, click **Custom domains** ➔ Enter your domain. It will activate with 1 click!
+Cloudflare will automatically issue and provision a free **SSL / TLS Certificate** for `https://instantipesubmit.com.ng`.
 
 ---
 
@@ -73,7 +48,7 @@ If you purchase your domain from **Namecheap, GoDaddy, Whogohost, Porkbun, Squar
 
 - **Login Credentials**:
   - URL: `/admin/login`
-  - Email: `admin@identityhub.ng`
+  - Email: `admin@instantipesubmit.com.ng`
   - Password: `Admin@2026Password!`
 - **Dashboard**: High-priority overview of submissions awaiting acceptance, active processing queue, revenue, and breakdown across all 5 services.
 - **Submissions Management**: Search, filter by service/status, review details, add internal notes, assign clearance certificates, and **Export to CSV**.

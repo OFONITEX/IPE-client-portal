@@ -7,7 +7,7 @@ import { Shield, Lock, Mail, ArrowRight, AlertCircle, Loader2 } from "lucide-rea
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@identityhub.ng");
+  const [email, setEmail] = useState("admin@instantipesubmit.com.ng");
   const [password, setPassword] = useState("Admin@2026Password!");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -71,7 +71,7 @@ export default function AdminLoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@identityhub.ng"
+                  placeholder="admin@instantipesubmit.com.ng"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-sm focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 outline-none"
                 />
               </div>
@@ -99,7 +99,7 @@ export default function AdminLoginPage() {
               <span className="font-semibold text-emerald-400">Default Credentials Provided:</span>
               <div className="flex justify-between">
                 <span>Email:</span>
-                <span className="font-mono text-slate-300">admin@identityhub.ng</span>
+                <span className="font-mono text-slate-300">admin@instantipesubmit.com.ng</span>
               </div>
               <div className="flex justify-between">
                 <span>Password:</span>

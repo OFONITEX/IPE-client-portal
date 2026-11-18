@@ -46,8 +46,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               OPERATOR CONSOLE
             </span>
-            <span className="text-xs text-slate-400 hidden sm:inline">
-              NIMC Clearance & Validation Gateway
+            <span className="text-xs text-slate-400 hidden sm:inline font-mono">
+              instantipesubmit.com.ng
             </span>
           </div>
 
