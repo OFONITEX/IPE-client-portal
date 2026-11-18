@@ -6,15 +6,15 @@ Includes a **public submission & tracking portal** with integrated payment gatew
 
 ---
 
-## 🚀 The 5 Supported Identity Services
+## 🚀 The 5 Supported Identity Services & Agent Pricing
 
-| # | Service Name | Code | Input Requirement | Purpose |
-|---|---|---|---|---|
-| **1** | **IPE Clearance** | `IPE` | **15 alphanumeric characters** | Fresh enrollment exception resolution |
-| **2** | **Mod IPE** | `MOD_IPE` | **15 alphanumeric characters** | Exception holds triggered during profile modifications |
-| **3** | **NIN Validation** | `VALIDATION` | **11 numeric digits** | Central NIN verification & KYC record sync |
-| **4** | **Mod Validation** | `MOD_VALIDATION` | **11 numeric digits** | Validation & synchronization after profile modification |
-| **5** | **NIN Modification** | `MODIFICATION` | **11 numeric digits** + Target Field | Data corrections *(Name, Date of Birth, Phone, Address, etc.)* |
+| # | Service Name | Code | Input Requirement | Agent Fee | Scope / Description |
+|---|---|---|---|---|---|
+| **1** | **IPE Clearance** | `IPE` | **15 alphanumeric characters** | **₦1,000** | Fresh enrollment exception resolution |
+| **2** | **Mod IPE** | `MOD_IPE` | **15 alphanumeric characters** | **₦2,500** | Exception holds triggered during modifications |
+| **3** | **NIN Validation** | `VALIDATION` | **11 numeric digits** | **₦1,500** | Central NIN verification & KYC record sync |
+| **4** | **Mod Validation** | `MOD_VALIDATION` | **11 numeric digits** | **₦1,500** | Validation & synchronization after modification |
+| **5** | **NIN Modification** | `MODIFICATION` | **11 numeric digits** | **₦2,500** | Data corrections *(Name, Phone, Address, Date of Birth)* |
 
 ---
 

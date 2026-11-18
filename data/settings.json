@@ -7,11 +7,11 @@
   "currency": "NGN",
   "currencySymbol": "₦",
   "rates": {
-    "ipe": 4500,
-    "modIpe": 5000,
+    "ipe": 1000,
+    "modIpe": 2500,
     "validation": 1500,
-    "modValidation": 2000,
-    "modification": 3500
+    "modValidation": 1500,
+    "modification": 2500
   },
   "paystack": {
     "enabled": true,

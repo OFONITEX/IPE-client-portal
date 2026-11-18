@@ -47,13 +47,12 @@ export default function HomePage() {
 
             {/* Main title */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-              Fast-Track Your <span className="text-emerald-400">IPE, Mod IPE</span> & NIN Validations
+              Instant <span className="text-emerald-400">IPE, Mod IPE</span> & NIN Clearance Desk
             </h1>
 
             {/* Subtitle */}
             <p className="text-base sm:text-lg text-slate-300 leading-relaxed max-w-2xl mx-auto">
-              Submit your 15-character IPE / Mod IPE exception clearance, 11-digit NIN Validation, Mod Validation, or
-              Data Modification on <strong className="text-emerald-300 font-mono">instantipesubmit.com.ng</strong> with instant secure payment and administrative review.
+              Fast-track agent portal on <strong className="text-emerald-300 font-mono">instantipesubmit.com.ng</strong> for IPE (₦1,000), Mod IPE (₦2,500), NIN Validation (₦1,500), Mod Validation (₦1,500), and NIN Modification (Name, Phone, Address, DOB).
             </p>
 
             {/* Hero CTAs */}

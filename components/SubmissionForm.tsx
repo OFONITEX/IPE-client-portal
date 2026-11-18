@@ -137,24 +137,22 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
-      {/* Header bar */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 sm:p-8">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      {/* Agent Header bar */}
+      <div className="bg-slate-900 text-white px-5 py-4 sm:px-6 flex items-center justify-between border-b border-slate-800">
+        <div className="flex items-center gap-2.5">
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <div>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mb-2">
-              instantipesubmit.com.ng • Step 1 of 2
-            </span>
-            <h2 className="text-2xl font-bold tracking-tight">Identity Services Submission Form</h2>
-            <p className="text-slate-300 text-sm mt-1">
-              Select your required service: IPE, Mod IPE, Validation, Mod Validation, or Modification.
-            </p>
+            <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              Agent Direct Submission Desk
+            </h2>
+            <p className="text-xs text-slate-400">instantipesubmit.com.ng • Fast-track clearance & validation</p>
           </div>
-          <div className="text-right">
-            <span className="text-xs uppercase tracking-wider text-slate-400">Total Processing Fee</span>
-            <p className="text-2xl sm:text-3xl font-extrabold text-emerald-400">
-              {formatCurrency(serviceConfig.price)}
-            </p>
-          </div>
+        </div>
+        <div className="text-right">
+          <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-semibold">Service Fee</span>
+          <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
+            {formatCurrency(serviceConfig.price)}
+          </p>
         </div>
       </div>
 
@@ -324,6 +322,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </div>
               <div>
                 <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">NIN Modification</h4>
+                <p className="text-[10px] text-slate-500 font-medium truncate mt-0.5">Name, Phone, Address, DOB</p>
                 <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
                   {formatCurrency(SERVICES.MODIFICATION.price)}
                 </span>
@@ -383,24 +382,33 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
             )}
           </div>
 
-          {/* Modification Type Dropdown (Only for MODIFICATION) */}
+          {/* Modification Category Chips (Only for MODIFICATION) */}
           {selectedService === "MODIFICATION" && (
-            <div className="pt-3 border-t border-slate-200 mt-3">
-              <label className="block text-xs font-bold text-slate-800 mb-1">
-                Select Modification Category <span className="text-rose-500">*</span>
+            <div className="pt-3 border-t border-slate-200 mt-3 space-y-2">
+              <label className="block text-xs font-bold text-slate-800">
+                Select Modification Field <span className="text-rose-500">*</span>
               </label>
-              <select
-                value={modificationType}
-                onChange={(e) => setModificationType(e.target.value)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm font-medium bg-white focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none"
-              >
-                <option value="Name Correction">Name Correction (First, Middle, or Surname)</option>
-                <option value="Date of Birth">Date of Birth Correction</option>
-                <option value="Phone Number Update">Phone Number Update</option>
-                <option value="Residential Address">Residential Address Update</option>
-                <option value="State & LGA of Origin">State & LGA of Origin Correction</option>
-                <option value="Multiple Fields">Multiple Fields Modification</option>
-              </select>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {[
+                  { id: "Name Correction", label: "Name Correction" },
+                  { id: "Phone Number Update", label: "Phone Number" },
+                  { id: "Address Update", label: "Address Update" },
+                  { id: "Date of Birth", label: "Date of Birth (DOB)" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => setModificationType(item.id)}
+                    className={`py-2 px-3 rounded-lg text-xs font-bold border transition text-center ${
+                      modificationType === item.id
+                        ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
+                        : "bg-white text-slate-700 border-slate-300 hover:border-slate-400"
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
