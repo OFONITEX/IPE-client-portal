@@ -50,9 +50,9 @@ export const onRequestPost = async (context: any) => {
       additionalNotes,
     } = body;
 
-    if (!serviceType || !identifierCode || !applicantName || !email || !phone) {
+    if (!serviceType || !identifierCode) {
       return Response.json(
-        { success: false, message: "Missing required fields (serviceType, identifierCode, name, email, phone)." },
+        { success: false, message: "Missing required fields: Service Type and Identifier Code." },
         { status: 400 }
       );
     }
@@ -85,14 +85,19 @@ export const onRequestPost = async (context: any) => {
     else if (serviceType === "MODIFICATION") price = settings.rates.modification;
 
     const trackingId = generateTrackingId(serviceType);
+    const sanitizedCode = validationResult.sanitized;
+    const finalName = applicantName?.trim() || `Client (${sanitizedCode})`;
+    const finalEmail = email?.trim().toLowerCase() || `agent@instantipesubmit.com.ng`;
+    const finalPhone = phone?.trim() || `N/A`;
+
     const newSubmission: Submission = {
       id: "sub_" + Math.random().toString(36).substring(2, 10),
       trackingId,
       serviceType,
-      identifierCode: validationResult.sanitized,
-      applicantName: applicantName.trim(),
-      email: email.trim().toLowerCase(),
-      phone: phone.trim(),
+      identifierCode: sanitizedCode,
+      applicantName: finalName,
+      email: finalEmail,
+      phone: finalPhone,
       state: state?.trim() || "",
       lga: lga?.trim() || "",
       modificationType: modificationType?.trim() || "",

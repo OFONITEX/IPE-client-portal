@@ -14,11 +14,6 @@ import {
   AlertCircle,
   ArrowRight,
   Lock,
-  User,
-  Mail,
-  Phone,
-  MapPin,
-  FileText,
   Loader2,
 } from "lucide-react";
 
@@ -32,13 +27,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
 
   const [selectedService, setSelectedService] = useState<ServiceType>(initialService);
   const [identifierCode, setIdentifierCode] = useState("");
-  const [applicantName, setApplicantName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [state, setState] = useState("");
-  const [lga, setLga] = useState("");
   const [modificationType, setModificationType] = useState("Name Correction");
-  const [additionalNotes, setAdditionalNotes] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -84,11 +73,6 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
       return;
     }
 
-    if (!applicantName.trim() || !email.trim() || !phone.trim()) {
-      setErrorMsg("Please complete all required contact fields.");
-      return;
-    }
-
     setSubmitting(true);
     try {
       const res = await fetch("/api/submissions", {
@@ -97,13 +81,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
         body: JSON.stringify({
           serviceType: selectedService,
           identifierCode: validation.sanitized,
-          applicantName,
-          email,
-          phone,
-          state,
-          lga,
           modificationType: selectedService === "MODIFICATION" ? modificationType : undefined,
-          additionalNotes,
         }),
       });
 
@@ -411,103 +389,6 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </div>
             </div>
           )}
-        </div>
-
-        {/* Applicant Details */}
-        <div className="space-y-4">
-          <h3 className="text-sm font-bold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-2">
-            Applicant Information
-          </h3>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Full Name */}
-            <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
-                Full Name (as registered) <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
-                  type="text"
-                  required
-                  value={applicantName}
-                  onChange={(e) => setApplicantName(e.target.value)}
-                  placeholder="e.g. Ibrahim Chukwuemeka Adeleke"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
-                Email Address (for notification & receipt) <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="name@example.com"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none"
-                />
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
-                Phone Number (WhatsApp/SMS) <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  placeholder="080 1234 5678"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none"
-                />
-              </div>
-            </div>
-
-            {/* State */}
-            <div>
-              <label className="block text-xs font-medium text-slate-700 mb-1">
-                State of Residence / Origin
-              </label>
-              <div className="relative">
-                <MapPin className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
-                  type="text"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                  placeholder="e.g. Lagos, Abuja, Kano"
-                  className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none"
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Additional Notes */}
-          <div>
-            <label className="block text-xs font-medium text-slate-700 mb-1">
-              Enrollment Center or Modification Notes (Optional)
-            </label>
-            <div className="relative">
-              <FileText className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-              <textarea
-                rows={2}
-                value={additionalNotes}
-                onChange={(e) => setAdditionalNotes(e.target.value)}
-                placeholder="Specify capture center, modification details, or exception background if applicable..."
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 text-sm focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 outline-none"
-              ></textarea>
-            </div>
-          </div>
         </div>
 
         {/* Error message */}

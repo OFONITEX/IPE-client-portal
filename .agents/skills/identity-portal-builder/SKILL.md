@@ -195,3 +195,4 @@ npx.cmd wrangler pages deploy out --project-name=ipe-client-portal --branch=main
    - Always dynamically import: `const confetti = (await import("canvas-confetti")).default;`.
 4. **Transient EPERM on Windows**:
    - Windows file watchers occasionally lock `.next` or `out`. If `EPERM: operation not permitted, mkdir ...` occurs, remove `out` and rerun the command.
+

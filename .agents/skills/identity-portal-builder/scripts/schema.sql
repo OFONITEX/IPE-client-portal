@@ -61,3 +61,4 @@ CREATE TABLE IF NOT EXISTS ipe_portal_settings (
 INSERT INTO ipe_portal_settings (id, rate_ipe, rate_mod_ipe, rate_validation, rate_mod_validation, rate_modification)
 VALUES (1, 1000, 2500, 1500, 1500, 2500)
 ON CONFLICT (id) DO NOTHING;
+
