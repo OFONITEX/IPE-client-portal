@@ -214,7 +214,7 @@ export default function AdminSettingsPage() {
             {/* 5. Modification Rate */}
             <div>
               <label className="block text-xs font-semibold text-slate-300 mb-1">
-                NIN Modification (Name, Phone, Address, DOB)
+                NIN Modification (Name, Phone, DOB, DOB above 5 years)
               </label>
               <div className="relative">
                 <span className="text-slate-500 absolute left-3.5 top-2.5 text-sm font-bold">₦</span>

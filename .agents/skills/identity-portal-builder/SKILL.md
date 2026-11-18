@@ -51,7 +51,7 @@ The portal follows the **Hybrid Static-Edge Pattern** designed specifically for 
 | **2** | **Mod IPE** | `MOD_IPE` | **15 alphanumeric characters** | **₦2,500** | Modification hold clearance |
 | **3** | **NIN Validation** | `VALIDATION` | **11 numeric digits** | **₦1,500** | Verification & record synchronization |
 | **4** | **Mod Validation** | `MOD_VALIDATION` | **11 numeric digits** | **₦1,500** | Post-modification sync & validation |
-| **5** | **NIN Modification** | `MODIFICATION` | **11 numeric digits** | **₦2,500** | **Name, Phone, Address, Date of Birth (DOB)** |
+| **5** | **NIN Modification** | `MODIFICATION` | **11 numeric digits** | **₦2,500** | **Name, Phone, Date of Birth (DOB), DOB above 5 years** |
 
 > [!IMPORTANT]
 > *Personalization* is excluded. Only these 5 standardized services are supported.

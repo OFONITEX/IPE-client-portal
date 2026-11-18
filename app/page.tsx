@@ -285,7 +285,7 @@ export default function HomePage() {
             </h4>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed pl-6">
               Provide your 11-digit NIN and select the target modification category (e.g. Name Correction, Date of
-              Birth, Phone, Address). Once payment is completed, the administrator will review your submission and route
+              Birth, Phone Number, DOB above 5 years). Once payment is completed, the administrator will review your submission and route
               it for regulatory data adjustment.
             </p>
           </div>

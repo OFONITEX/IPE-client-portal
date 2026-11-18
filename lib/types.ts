@@ -43,7 +43,7 @@ export interface Submission {
   phone: string;
   state?: string;
   lga?: string;
-  modificationType?: string; // For MODIFICATION: "Name", "Date of Birth", "Phone", "Address", "Other"
+  modificationType?: string; // For MODIFICATION: "Name Correction", "Phone Number Update", "Date of Birth", "DOB above 5 years"
   additionalNotes?: string;
   
   // Payment info

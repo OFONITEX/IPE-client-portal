@@ -300,7 +300,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </div>
               <div>
                 <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">NIN Modification</h4>
-                <p className="text-[10px] text-slate-500 font-medium truncate mt-0.5">Name, Phone, Address, DOB</p>
+                <p className="text-[10px] text-slate-500 font-medium truncate mt-0.5">Name, Phone, DOB, DOB &gt; 5yrs</p>
                 <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
                   {formatCurrency(SERVICES.MODIFICATION.price)}
                 </span>
@@ -370,8 +370,8 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 {[
                   { id: "Name Correction", label: "Name Correction" },
                   { id: "Phone Number Update", label: "Phone Number" },
-                  { id: "Address Update", label: "Address Update" },
                   { id: "Date of Birth", label: "Date of Birth (DOB)" },
+                  { id: "DOB above 5 years", label: "DOB above 5 years" },
                 ].map((item) => (
                   <button
                     key={item.id}

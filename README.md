@@ -14,7 +14,7 @@ Includes a **public submission & tracking portal** with integrated payment gatew
 | **2** | **Mod IPE** | `MOD_IPE` | **15 alphanumeric characters** | **₦2,500** | Exception holds triggered during modifications |
 | **3** | **NIN Validation** | `VALIDATION` | **11 numeric digits** | **₦1,500** | Central NIN verification & KYC record sync |
 | **4** | **Mod Validation** | `MOD_VALIDATION` | **11 numeric digits** | **₦1,500** | Validation & synchronization after modification |
-| **5** | **NIN Modification** | `MODIFICATION` | **11 numeric digits** | **₦2,500** | Data corrections *(Name, Phone, Address, Date of Birth)* |
+| **5** | **NIN Modification** | `MODIFICATION` | **11 numeric digits** | **₦2,500** | Data corrections *(Name, Phone, Date of Birth, DOB above 5 years)* |
 
 ---
 

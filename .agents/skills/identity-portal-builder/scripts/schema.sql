@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS ipe_submissions (
   tracking_id VARCHAR(50) UNIQUE NOT NULL,
   service_type VARCHAR(30) NOT NULL, -- IPE, MOD_IPE, VALIDATION, MOD_VALIDATION, MODIFICATION
   identifier_code VARCHAR(30) NOT NULL, -- 15-char alphanumeric or 11-digit NIN
-  modification_type VARCHAR(100), -- Name Correction, Phone Number Update, Address Update, Date of Birth
+  modification_type VARCHAR(100), -- Name Correction, Phone Number Update, Date of Birth, DOB above 5 years
   applicant_name VARCHAR(150) NOT NULL,
   email VARCHAR(150),
   phone VARCHAR(50) NOT NULL,
