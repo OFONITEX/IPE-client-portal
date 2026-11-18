@@ -11,12 +11,12 @@ export const onRequestPost = async (context: any) => {
       );
     }
 
-    const submission = getSubmissionById(submissionId);
+    const submission = await getSubmissionById(submissionId, context.env);
     if (!submission) {
       return Response.json({ success: false, message: "Submission not found" }, { status: 404 });
     }
 
-    const settings = getSettings();
+    const settings = await getSettings(context.env);
     let paymentVerified = false;
 
     if (!simulated && settings.paystack.secretKey && !settings.paystack.secretKey.includes("sample_secret")) {
@@ -50,13 +50,13 @@ export const onRequestPost = async (context: any) => {
     }
 
     if (paymentVerified) {
-      const updated = updateSubmission(submission.id, {
+      const updated = await updateSubmission(submission.id, {
         paymentStatus: "PAID",
         paymentReference: reference,
         paymentChannel: channel as any,
         paidAt: new Date().toISOString(),
         status: "PAID_PENDING_ACCEPTANCE",
-      });
+      }, context.env);
 
       return Response.json({
         success: true,

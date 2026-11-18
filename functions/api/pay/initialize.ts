@@ -9,17 +9,17 @@ export const onRequestPost = async (context: any) => {
       return Response.json({ success: false, message: "submissionId is required" }, { status: 400 });
     }
 
-    const submission = getSubmissionById(submissionId);
+    const submission = await getSubmissionById(submissionId, context.env);
     if (!submission) {
       return Response.json({ success: false, message: "Submission not found" }, { status: 404 });
     }
 
-    const settings = getSettings();
+    const settings = await getSettings(context.env);
     const reference = generatePaymentReference();
 
-    updateSubmission(submission.id, {
+    await updateSubmission(submission.id, {
       paymentReference: reference,
-    });
+    }, context.env);
 
     const amountInKobo = submission.amount * 100;
     const publicKey = settings.paystack.publicKey || "pk_test_sample_key_identity_portal";

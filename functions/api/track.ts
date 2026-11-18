@@ -10,10 +10,10 @@ export const onRequestGet = async (context: any) => {
     }
 
     const clean = query.trim().toUpperCase();
-    const submission = getSubmissionById(clean);
+    const submission = await getSubmissionById(clean, context.env);
 
     if (!submission) {
-      const all = getSubmissions();
+      const all = await getSubmissions(context.env);
       const match = all.find(
         (s) =>
           s.trackingId.toUpperCase() === clean ||

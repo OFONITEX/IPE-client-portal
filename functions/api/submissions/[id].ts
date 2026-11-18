@@ -4,7 +4,7 @@ import { SubmissionStatus } from "../../../lib/types";
 export const onRequestGet = async (context: any) => {
   try {
     const id = context.params.id as string;
-    const submission = getSubmissionById(id);
+    const submission = await getSubmissionById(id, context.env);
     if (!submission) {
       return Response.json({ success: false, message: "Submission not found" }, { status: 404 });
     }
@@ -18,7 +18,7 @@ export const onRequestPatch = async (context: any) => {
   try {
     const id = context.params.id as string;
     const body: any = await context.request.json();
-    const submission = getSubmissionById(id);
+    const submission = await getSubmissionById(id, context.env);
 
     if (!submission) {
       return Response.json({ success: false, message: "Submission not found" }, { status: 404 });
@@ -65,7 +65,7 @@ export const onRequestPatch = async (context: any) => {
       }
     }
 
-    const updated = updateSubmission(submission.id, updates);
+    const updated = await updateSubmission(submission.id, updates, context.env);
     return Response.json({ success: true, data: updated });
   } catch (error: any) {
     return Response.json({ success: false, message: error.message }, { status: 500 });

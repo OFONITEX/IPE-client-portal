@@ -9,7 +9,7 @@ export const onRequestGet = async (context: any) => {
     const status = url.searchParams.get("status");
     const search = url.searchParams.get("search");
 
-    let items = getSubmissions();
+    let items = await getSubmissions(context.env);
 
     if (service && service !== "ALL") {
       items = items.filter((s) => s.serviceType === service);
@@ -76,7 +76,7 @@ export const onRequestPost = async (context: any) => {
       );
     }
 
-    const settings = getSettings();
+    const settings = await getSettings(context.env);
     let price = 1500;
     if (serviceType === "IPE") price = settings.rates.ipe;
     else if (serviceType === "MOD_IPE") price = settings.rates.modIpe;
@@ -105,7 +105,7 @@ export const onRequestPost = async (context: any) => {
       updatedAt: new Date().toISOString(),
     };
 
-    const created = createSubmission(newSubmission);
+    const created = await createSubmission(newSubmission, context.env);
     return Response.json({ success: true, data: created }, { status: 201 });
   } catch (error: any) {
     return Response.json({ success: false, message: error.message }, { status: 500 });
