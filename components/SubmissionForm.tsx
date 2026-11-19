@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ServiceType, DOBModificationData } from "@/lib/types";
+import { ServiceType, DOBModificationData, PhoneModificationData } from "@/lib/types";
 import { SERVICES } from "@/lib/config";
 import { validateServiceCode, formatCurrency } from "@/lib/utils";
 import {
@@ -19,6 +19,10 @@ import {
   Camera,
   User,
   Users,
+  Phone,
+  Mail,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 interface Props {
@@ -50,6 +54,16 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
   const photoInputRef = useRef<HTMLInputElement>(null);
 
   const isDOBType = modificationType === "Date of Birth" || modificationType === "DOB above 5 years";
+  const isPhoneType = modificationType === "Phone Number Update";
+
+  // Phone Number Modification state
+  const [phoneData, setPhoneData] = useState<PhoneModificationData>({
+    nin: "",
+    newPhoneNumber: "",
+    newEmail: "",
+    emailPassword: "",
+  });
+  const [showEmailPassword, setShowEmailPassword] = useState(false);
 
   const updateDOB = (field: keyof DOBModificationData, value: string) => {
     setDobData((prev) => ({ ...prev, [field]: value }));
@@ -140,6 +154,34 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
         if (dobData.newLGA || dobData.oldLGA) {
           payload.lga = dobData.newLGA || dobData.oldLGA;
         }
+      }
+
+      // Attach Phone modification data if Phone Number Update is selected
+      if (selectedService === "MODIFICATION" && isPhoneType) {
+        if (!phoneData.newPhoneNumber.trim()) {
+          setErrorMsg("Please enter the new phone number.");
+          setSubmitting(false);
+          return;
+        }
+        if (!phoneData.newEmail.trim()) {
+          setErrorMsg("Please enter the new email address.");
+          setSubmitting(false);
+          return;
+        }
+        if (!phoneData.emailPassword.trim()) {
+          setErrorMsg("Please enter the password for the new email.");
+          setSubmitting(false);
+          return;
+        }
+
+        payload.phoneModificationData = {
+          nin: validation.sanitized,
+          newPhoneNumber: phoneData.newPhoneNumber.trim(),
+          newEmail: phoneData.newEmail.trim(),
+          emailPassword: phoneData.emailPassword.trim(),
+        };
+        payload.phone = phoneData.newPhoneNumber.trim();
+        payload.email = phoneData.newEmail.trim();
       }
 
       const res = await fetch("/api/submissions", {
@@ -453,6 +495,124 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
             </div>
           )}
         </div>
+
+        {/* Phone Number Correction Extended Form */}
+        {selectedService === "MODIFICATION" && isPhoneType && (
+          <div className="bg-blue-50/60 border border-blue-200 rounded-2xl p-5 sm:p-6 space-y-5">
+            <div className="flex items-center gap-2.5 border-b border-blue-200 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center shrink-0">
+                <Phone className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                  Phone Number Correction Details
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Please provide your 11-digit NIN, new phone number, new email, and email password.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* 1. NIN Number */}
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <ShieldAlert className="w-3.5 h-3.5 text-blue-600" />
+                    <span>NIN Number (11 Digits)</span>
+                    <span className="text-rose-500">*</span>
+                  </span>
+                  <span
+                    className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                      identifierCode.length === 11
+                        ? "bg-emerald-100 text-emerald-800"
+                        : "bg-slate-200 text-slate-600"
+                    }`}
+                  >
+                    {identifierCode.length} / 11 digits
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  value={identifierCode}
+                  onChange={handleCodeChange}
+                  placeholder="Enter 11-digit NIN (e.g. 12345678901)"
+                  maxLength={11}
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 font-mono text-base font-bold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Must be the 11-digit National Identification Number.</p>
+              </div>
+
+              {/* 2. New Phone Number */}
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-blue-600" />
+                  <span>New Phone Number</span>
+                  <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  value={phoneData.newPhoneNumber}
+                  onChange={(e) => setPhoneData((prev) => ({ ...prev, newPhoneNumber: e.target.value }))}
+                  placeholder="e.g. 08012345678"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Active phone number to link to your NIN profile.</p>
+              </div>
+
+              {/* 3. New Email */}
+              <div>
+                <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
+                  <Mail className="w-3.5 h-3.5 text-blue-600" />
+                  <span>New Email Address</span>
+                  <span className="text-rose-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  value={phoneData.newEmail}
+                  onChange={(e) => setPhoneData((prev) => ({ ...prev, newEmail: e.target.value }))}
+                  placeholder="e.g. applicant@gmail.com"
+                  className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">Active email to be linked for verification.</p>
+              </div>
+
+              {/* 4. Email Password */}
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5">
+                    <Lock className="w-3.5 h-3.5 text-blue-600" />
+                    <span>Email Password</span>
+                    <span className="text-rose-500">*</span>
+                  </span>
+                  <span className="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded font-medium">
+                    Required for email sync & verification
+                  </span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showEmailPassword ? "text" : "password"}
+                    value={phoneData.emailPassword}
+                    onChange={(e) => setPhoneData((prev) => ({ ...prev, emailPassword: e.target.value }))}
+                    placeholder="Enter password for the new email address"
+                    className="w-full pl-4 pr-11 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowEmailPassword(!showEmailPassword)}
+                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
+                    title={showEmailPassword ? "Hide password" : "Show password"}
+                  >
+                    {showEmailPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-1">
+                  Password for the new email to enable verification code authorization.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* DOB Modification Extended Form (for Date of Birth & DOB above 5 years) */}
         {selectedService === "MODIFICATION" && isDOBType && (

@@ -22,6 +22,9 @@ import {
   Sliders,
   XCircle,
   Users,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 
 interface Props {
@@ -50,6 +53,18 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
       // not JSON
     }
   }
+
+  // Check for serialized Phone Number Modification form data
+  let phoneDetails: any = null;
+  if (submission.additionalNotes && submission.additionalNotes.includes('"_type":"PHONE_MODIFICATION_FORM"')) {
+    try {
+      phoneDetails = JSON.parse(submission.additionalNotes);
+    } catch (e) {
+      // not JSON
+    }
+  }
+
+  const [showAdminEmailPassword, setShowAdminEmailPassword] = useState(false);
 
   const copyCode = () => {
     navigator.clipboard.writeText(submission.identifierCode);
@@ -323,6 +338,119 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
               </div>
             </div>
           </div>
+
+          {/* Phone Number Modification Extended Details Card */}
+          {phoneDetails && (
+            <div className="bg-blue-50/70 border border-blue-200 rounded-xl p-4 sm:p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-blue-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center">
+                    <Phone className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                      Phone Number Correction Record
+                    </h4>
+                    <p className="text-[10px] text-slate-500">Applicant SIM & email particulars for update</p>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-mono font-bold bg-white px-2 py-1 rounded border border-blue-300 text-blue-800">
+                  Phone Update
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                {/* 1. NIN Number */}
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">NIN Number</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-slate-900 text-sm">
+                      {phoneDetails.nin || submission.identifierCode}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigator.clipboard.writeText(phoneDetails.nin || submission.identifierCode)}
+                      className="p-1 hover:bg-slate-100 rounded text-slate-500"
+                      title="Copy NIN"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. New Phone Number */}
+                <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-emerald-700 block">New Phone Number</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-emerald-800 text-sm">
+                      {phoneDetails.newPhoneNumber || "—"}
+                    </span>
+                    {phoneDetails.newPhoneNumber && (
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard.writeText(phoneDetails.newPhoneNumber)}
+                        className="p-1 hover:bg-emerald-50 rounded text-emerald-600"
+                        title="Copy Phone"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 3. New Email */}
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">New Email</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-semibold text-slate-900 text-xs truncate">
+                      {phoneDetails.newEmail || "—"}
+                    </span>
+                    {phoneDetails.newEmail && (
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard.writeText(phoneDetails.newEmail)}
+                        className="p-1 hover:bg-slate-100 rounded text-slate-500 shrink-0"
+                        title="Copy Email"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 4. Email Password */}
+                <div className="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-amber-700 block">Email Password</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-slate-900 text-xs">
+                      {showAdminEmailPassword ? phoneDetails.emailPassword || "—" : "••••••••••••"}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAdminEmailPassword(!showAdminEmailPassword)}
+                        className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
+                        title={showAdminEmailPassword ? "Hide password" : "Show password"}
+                      >
+                        {showAdminEmailPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                      {phoneDetails.emailPassword && (
+                        <button
+                          type="button"
+                          onClick={() => navigator.clipboard.writeText(phoneDetails.emailPassword)}
+                          className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
+                          title="Copy Password"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* DOB Modification Extended Details Card */}
           {dobDetails && (

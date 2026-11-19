@@ -45,6 +45,7 @@ export interface Submission {
   lga?: string;
   modificationType?: string; // For MODIFICATION: "Name Correction", "Phone Number Update", "Date of Birth", "DOB above 5 years"
   dobModificationData?: DOBModificationData; // Extended form data for DOB and DOB above 5 years modifications
+  phoneModificationData?: PhoneModificationData; // Extended form data for Phone Number Update
   additionalNotes?: string;
   
   // Payment info
@@ -110,6 +111,13 @@ export interface DOBModificationData {
   trackingId: string;
   // Passport photo (base64 data URL)
   passportPhoto?: string;
+}
+
+export interface PhoneModificationData {
+  nin: string;
+  newPhoneNumber: string;
+  newEmail: string;
+  emailPassword: string;
 }
 
 export interface AdminUser {

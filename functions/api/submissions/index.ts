@@ -49,6 +49,7 @@ export const onRequestPost = async (context: any) => {
       modificationType,
       additionalNotes,
       dobModificationData,
+      phoneModificationData,
     } = body;
 
     if (!serviceType || !identifierCode) {
@@ -88,13 +89,15 @@ export const onRequestPost = async (context: any) => {
     const trackingId = generateTrackingId(serviceType);
     const sanitizedCode = validationResult.sanitized;
     const finalName = applicantName?.trim() || `Client (${sanitizedCode})`;
-    const finalEmail = email?.trim().toLowerCase() || `agent@instantipesubmit.com.ng`;
-    const finalPhone = phone?.trim() || `N/A`;
+    const finalEmail = phoneModificationData?.newEmail?.trim().toLowerCase() || email?.trim().toLowerCase() || `agent@instantipesubmit.com.ng`;
+    const finalPhone = phoneModificationData?.newPhoneNumber?.trim() || phone?.trim() || `N/A`;
 
-    // If DOB modification data is provided, serialize it into additional_notes as structured JSON
+    // If DOB or Phone modification data is provided, serialize it into additional_notes as structured JSON
     let finalNotes = additionalNotes?.trim() || "";
     if (dobModificationData && typeof dobModificationData === "object") {
       finalNotes = JSON.stringify({ _type: "DOB_MODIFICATION_FORM", ...dobModificationData });
+    } else if (phoneModificationData && typeof phoneModificationData === "object") {
+      finalNotes = JSON.stringify({ _type: "PHONE_MODIFICATION_FORM", ...phoneModificationData });
     }
 
     const newSubmission: Submission = {
