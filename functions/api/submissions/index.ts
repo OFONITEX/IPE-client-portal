@@ -50,6 +50,7 @@ export const onRequestPost = async (context: any) => {
       additionalNotes,
       dobModificationData,
       phoneModificationData,
+      nameModificationData,
     } = body;
 
     if (!serviceType || !identifierCode) {
@@ -88,16 +89,24 @@ export const onRequestPost = async (context: any) => {
 
     const trackingId = generateTrackingId(serviceType);
     const sanitizedCode = validationResult.sanitized;
-    const finalName = applicantName?.trim() || `Client (${sanitizedCode})`;
-    const finalEmail = phoneModificationData?.newEmail?.trim().toLowerCase() || email?.trim().toLowerCase() || `agent@instantipesubmit.com.ng`;
+    const nameFromModification = nameModificationData
+      ? `${nameModificationData.newSurname || ""} ${nameModificationData.newFirstName || ""} ${nameModificationData.newMiddleName || ""}`.trim()
+      : "";
+    const finalName = nameFromModification || applicantName?.trim() || `Client (${sanitizedCode})`;
+    const finalEmail = nameModificationData?.newEmail?.trim().toLowerCase() ||
+      phoneModificationData?.newEmail?.trim().toLowerCase() ||
+      email?.trim().toLowerCase() ||
+      `agent@instantipesubmit.com.ng`;
     const finalPhone = phoneModificationData?.newPhoneNumber?.trim() || phone?.trim() || `N/A`;
 
-    // If DOB or Phone modification data is provided, serialize it into additional_notes as structured JSON
+    // If DOB, Phone, or Name modification data is provided, serialize it into additional_notes as structured JSON
     let finalNotes = additionalNotes?.trim() || "";
     if (dobModificationData && typeof dobModificationData === "object") {
       finalNotes = JSON.stringify({ _type: "DOB_MODIFICATION_FORM", ...dobModificationData });
     } else if (phoneModificationData && typeof phoneModificationData === "object") {
       finalNotes = JSON.stringify({ _type: "PHONE_MODIFICATION_FORM", ...phoneModificationData });
+    } else if (nameModificationData && typeof nameModificationData === "object") {
+      finalNotes = JSON.stringify({ _type: "NAME_MODIFICATION_FORM", ...nameModificationData });
     }
 
     const newSubmission: Submission = {

@@ -64,7 +64,18 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
     }
   }
 
+  // Check for serialized Name Modification form data
+  let nameDetails: any = null;
+  if (submission.additionalNotes && submission.additionalNotes.includes('"_type":"NAME_MODIFICATION_FORM"')) {
+    try {
+      nameDetails = JSON.parse(submission.additionalNotes);
+    } catch (e) {
+      // not JSON
+    }
+  }
+
   const [showAdminEmailPassword, setShowAdminEmailPassword] = useState(false);
+  const [showAdminNamePassword, setShowAdminNamePassword] = useState(false);
 
   const copyCode = () => {
     navigator.clipboard.writeText(submission.identifierCode);
@@ -338,6 +349,118 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
               </div>
             </div>
           </div>
+
+          {/* Name Correction Extended Details Card */}
+          {nameDetails && (
+            <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 sm:p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-emerald-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+                    <User className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                      Name Correction Record
+                    </h4>
+                    <p className="text-[10px] text-slate-500">Applicant legal names & email credentials</p>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-mono font-bold bg-white px-2 py-1 rounded border border-emerald-300 text-emerald-800">
+                  Name Update
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                {/* 1. NIN Number */}
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 sm:col-span-2">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">NIN Number</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-slate-900 text-sm">
+                      {nameDetails.nin || submission.identifierCode}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => navigator.clipboard.writeText(nameDetails.nin || submission.identifierCode)}
+                      className="p-1 hover:bg-slate-100 rounded text-slate-500"
+                      title="Copy NIN"
+                    >
+                      <Copy className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* 2. New Full Legal Name */}
+                <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1 sm:col-span-2">
+                  <span className="text-[10px] uppercase font-bold text-emerald-700 block">New Legal Names</span>
+                  <div className="grid grid-cols-3 gap-2 text-xs pt-0.5">
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Surname</span>
+                      <span className="font-bold text-slate-900">{nameDetails.newSurname || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">First Name</span>
+                      <span className="font-bold text-slate-900">{nameDetails.newFirstName || "—"}</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 block">Middle Name</span>
+                      <span className="font-medium text-slate-900">{nameDetails.newMiddleName || "—"}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. New Email */}
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-slate-500 block">New Email</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-semibold text-slate-900 text-xs truncate">
+                      {nameDetails.newEmail || "—"}
+                    </span>
+                    {nameDetails.newEmail && (
+                      <button
+                        type="button"
+                        onClick={() => navigator.clipboard.writeText(nameDetails.newEmail)}
+                        className="p-1 hover:bg-slate-100 rounded text-slate-500 shrink-0"
+                        title="Copy Email"
+                      >
+                        <Copy className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </div>
+                </div>
+
+                {/* 4. Email Password */}
+                <div className="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
+                  <span className="text-[10px] uppercase font-bold text-amber-700 block">Email Password</span>
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono font-bold text-slate-900 text-xs">
+                      {showAdminNamePassword ? nameDetails.emailPassword || "—" : "••••••••••••"}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setShowAdminNamePassword(!showAdminNamePassword)}
+                        className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
+                        title={showAdminNamePassword ? "Hide password" : "Show password"}
+                      >
+                        {showAdminNamePassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                      {nameDetails.emailPassword && (
+                        <button
+                          type="button"
+                          onClick={() => navigator.clipboard.writeText(nameDetails.emailPassword)}
+                          className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
+                          title="Copy Password"
+                        >
+                          <Copy className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Phone Number Modification Extended Details Card */}
           {phoneDetails && (

@@ -46,6 +46,7 @@ export interface Submission {
   modificationType?: string; // For MODIFICATION: "Name Correction", "Phone Number Update", "Date of Birth", "DOB above 5 years"
   dobModificationData?: DOBModificationData; // Extended form data for DOB and DOB above 5 years modifications
   phoneModificationData?: PhoneModificationData; // Extended form data for Phone Number Update
+  nameModificationData?: NameModificationData; // Extended form data for Name Correction
   additionalNotes?: string;
   
   // Payment info
@@ -116,6 +117,15 @@ export interface DOBModificationData {
 export interface PhoneModificationData {
   nin: string;
   newPhoneNumber: string;
+  newEmail: string;
+  emailPassword: string;
+}
+
+export interface NameModificationData {
+  nin: string;
+  newSurname: string;
+  newFirstName: string;
+  newMiddleName: string;
   newEmail: string;
   emailPassword: string;
 }
