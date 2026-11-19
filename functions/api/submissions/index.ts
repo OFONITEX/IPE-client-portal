@@ -80,12 +80,20 @@ export const onRequestPost = async (context: any) => {
     }
 
     const settings = await getSettings(context.env);
-    let price = 1500;
-    if (serviceType === "IPE") price = settings.rates.ipe;
-    else if (serviceType === "MOD_IPE") price = settings.rates.modIpe;
-    else if (serviceType === "VALIDATION") price = settings.rates.validation;
-    else if (serviceType === "MOD_VALIDATION") price = settings.rates.modValidation;
-    else if (serviceType === "MODIFICATION") price = settings.rates.modification;
+    let price = 550;
+    if (serviceType === "IPE") price = settings.rates.ipe ?? 550;
+    else if (serviceType === "MOD_IPE") price = settings.rates.modIpe ?? 2000;
+    else if (serviceType === "VALIDATION") price = settings.rates.validation ?? 1000;
+    else if (serviceType === "MOD_VALIDATION") price = settings.rates.modValidation ?? 1500;
+    else if (serviceType === "MODIFICATION") {
+      if (modificationType === "Date of Birth" || modificationType === "DOB above 5 years") {
+        price = 53000;
+      } else if (modificationType === "Phone Number Update" || modificationType === "Name Correction") {
+        price = 6500;
+      } else {
+        price = settings.rates.modification ?? 6500;
+      }
+    }
 
     const trackingId = generateTrackingId(serviceType);
     const sanitizedCode = validationResult.sanitized;

@@ -193,11 +193,11 @@ export async function getSettings(env?: any): Promise<PortalSettings> {
           currency: data.currency || DEFAULT_SETTINGS.currency,
           currencySymbol: data.currency_symbol || DEFAULT_SETTINGS.currencySymbol,
           rates: {
-            ipe: Number(data.rate_ipe) || 1000,
-            modIpe: Number(data.rate_mod_ipe) || 2500,
-            validation: Number(data.rate_validation) || 1500,
+            ipe: Number(data.rate_ipe) || 550,
+            modIpe: Number(data.rate_mod_ipe) || 2000,
+            validation: Number(data.rate_validation) || 1000,
             modValidation: Number(data.rate_mod_validation) || 1500,
-            modification: Number(data.rate_modification) || 2500,
+            modification: Number(data.rate_modification) || 6500,
           },
           paystack: {
             enabled: DEFAULT_SETTINGS.paystack.enabled,

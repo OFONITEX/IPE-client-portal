@@ -11,7 +11,7 @@ export const SERVICES: Record<string, ServiceConfig> = {
     expectedLength: 15,
     formatType: "ALPHANUMERIC_15",
     helperText: "Must be exactly 15 characters consisting of letters (A-Z) and numbers (0-9).",
-    price: 1000,
+    price: 550,
     icon: "ShieldAlert",
     badgeText: "Enrollment Exception",
   },
@@ -25,7 +25,7 @@ export const SERVICES: Record<string, ServiceConfig> = {
     expectedLength: 15,
     formatType: "ALPHANUMERIC_15",
     helperText: "Must be exactly 15 characters consisting of letters (A-Z) and numbers (0-9).",
-    price: 2500,
+    price: 2000,
     icon: "FileEdit",
     badgeText: "Modification Hold",
     isModification: true,
@@ -40,7 +40,7 @@ export const SERVICES: Record<string, ServiceConfig> = {
     expectedLength: 11,
     formatType: "NUMERIC_11",
     helperText: "Must be exactly 11 numeric digits (0-9).",
-    price: 1500,
+    price: 1000,
     icon: "CheckCircle2",
     badgeText: "Instant Verification",
   },
@@ -69,12 +69,33 @@ export const SERVICES: Record<string, ServiceConfig> = {
     expectedLength: 11,
     formatType: "NUMERIC_11",
     helperText: "Must be exactly 11 numeric digits (0-9).",
-    price: 2500,
+    price: 6500,
     icon: "Sliders",
     badgeText: "Data Correction",
     isModification: true,
   },
 };
+
+export const MODIFICATION_SUB_RATES: Record<string, number> = {
+  "Name Correction": 6500,
+  "Phone Number Update": 6500,
+  "Date of Birth": 53000,
+  "DOB above 5 years": 53000,
+};
+
+export function getServiceRate(serviceType: string, modificationType?: string): number {
+  if (serviceType === "IPE") return 550;
+  if (serviceType === "MOD_IPE") return 2000;
+  if (serviceType === "VALIDATION") return 1000;
+  if (serviceType === "MOD_VALIDATION") return 1500;
+  if (serviceType === "MODIFICATION") {
+    if (modificationType && MODIFICATION_SUB_RATES[modificationType]) {
+      return MODIFICATION_SUB_RATES[modificationType];
+    }
+    return 6500;
+  }
+  return 550;
+}
 
 export const DEFAULT_SETTINGS: PortalSettings = {
   portalName: "InstantIPESubmit",
@@ -85,11 +106,11 @@ export const DEFAULT_SETTINGS: PortalSettings = {
   currency: "NGN",
   currencySymbol: "₦",
   rates: {
-    ipe: 1000,
-    modIpe: 2500,
-    validation: 1500,
+    ipe: 550,
+    modIpe: 2000,
+    validation: 1000,
     modValidation: 1500,
-    modification: 2500,
+    modification: 6500,
   },
   paystack: {
     enabled: true,

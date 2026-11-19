@@ -110,6 +110,14 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
 
   const serviceConfig = SERVICES[selectedService] || SERVICES.IPE;
 
+  // Dynamic price computation (with sub-rates for modification types)
+  const currentPrice =
+    selectedService === "MODIFICATION"
+      ? modificationType === "Date of Birth" || modificationType === "DOB above 5 years"
+        ? 53000
+        : 6500
+      : SERVICES[selectedService]?.price || 550;
+
   // Real-time validation computation
   const validation = validateServiceCode(selectedService, identifierCode);
   const rawLength = identifierCode.replace(/\s+/g, "").length;
@@ -282,7 +290,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
         <div className="text-right">
           <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-semibold">Service Fee</span>
           <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
-            {formatCurrency(serviceConfig.price)}
+            {formatCurrency(currentPrice)}
           </p>
         </div>
       </div>
@@ -455,7 +463,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 <h4 className="font-bold text-slate-900 text-xs sm:text-sm leading-tight">NIN Modification</h4>
                 <p className="text-[10px] text-slate-500 font-medium truncate mt-0.5">Name, Phone, DOB, DOB &gt; 5yrs</p>
                 <span className="text-xs font-extrabold text-emerald-700 mt-1 block">
-                  {formatCurrency(SERVICES.MODIFICATION.price)}
+                  {selectedService === "MODIFICATION" ? formatCurrency(currentPrice) : "From ₦6,500"}
                 </span>
               </div>
             </button>
@@ -521,22 +529,29 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </label>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                 {[
-                  { id: "Name Correction", label: "Name Correction" },
-                  { id: "Phone Number Update", label: "Phone Number" },
-                  { id: "Date of Birth", label: "Date of Birth (DOB)" },
-                  { id: "DOB above 5 years", label: "DOB above 5 years" },
+                  { id: "Name Correction", label: "Name Correction", price: 6500 },
+                  { id: "Phone Number Update", label: "Phone Number", price: 6500 },
+                  { id: "Date of Birth", label: "Date of Birth (DOB)", price: 53000 },
+                  { id: "DOB above 5 years", label: "DOB above 5 years", price: 53000 },
                 ].map((item) => (
                   <button
                     key={item.id}
                     type="button"
                     onClick={() => setModificationType(item.id)}
-                    className={`py-2 px-3 rounded-lg text-xs font-bold border transition text-center ${
+                    className={`py-2 px-3 rounded-lg text-xs font-bold border transition text-center flex flex-col items-center justify-center gap-0.5 ${
                       modificationType === item.id
                         ? "bg-emerald-600 text-white border-emerald-600 shadow-sm"
                         : "bg-white text-slate-700 border-slate-300 hover:border-slate-400"
                     }`}
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    <span
+                      className={`text-[10px] font-mono font-bold ${
+                        modificationType === item.id ? "text-emerald-100" : "text-emerald-700"
+                      }`}
+                    >
+                      {formatCurrency(item.price)}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -1025,7 +1040,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </>
             ) : (
               <>
-                <span>Proceed to Payment ({formatCurrency(serviceConfig.price)})</span>
+                <span>Proceed to Payment ({formatCurrency(currentPrice)})</span>
                 <ArrowRight className="w-5 h-5" />
               </>
             )}

@@ -126,7 +126,7 @@ export default function AdminSettingsPage() {
                   type="number"
                   required
                   min="0"
-                  step="100"
+                  step="50"
                   value={settings.rates.ipe}
                   onChange={(e) =>
                     setSettings({
