@@ -64,15 +64,7 @@ export function Navbar() {
           <Link
             href="/"
             className={`text-sm font-medium transition ${
-              pathname === "/" ? "text-emerald-600 font-semibold" : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Home
-          </Link>
-          <Link
-            href="/submit"
-            className={`text-sm font-medium transition ${
-              pathname.startsWith("/submit") ? "text-emerald-600 font-semibold" : "text-slate-600 hover:text-slate-900"
+              pathname === "/" || pathname.startsWith("/submit") ? "text-emerald-600 font-semibold" : "text-slate-600 hover:text-slate-900"
             }`}
           >
             Submit Application
@@ -85,12 +77,6 @@ export function Navbar() {
           >
             <Search className="w-4 h-4 text-emerald-600" />
             Track Status
-          </Link>
-          <Link
-            href="/#services"
-            className="text-sm font-medium text-slate-600 hover:text-slate-900 transition"
-          >
-            Available Services
           </Link>
           <Link
             href="/#faq"
@@ -109,7 +95,7 @@ export function Navbar() {
             Track Reference
           </Link>
           <Link
-            href="/submit"
+            href="/"
             className="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg shadow-sm hover:shadow transition flex items-center gap-1.5"
           >
             <FileText className="w-4 h-4" />
@@ -160,7 +146,7 @@ export function Navbar() {
           </Link>
           <div className="pt-2">
             <Link
-              href="/submit"
+              href="/"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full text-center block px-4 py-2.5 rounded-lg text-white bg-emerald-600 font-semibold"
             >
