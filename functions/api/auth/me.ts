@@ -13,3 +13,4 @@ export const onRequestGet = async (context: any) => {
 
   return Response.json({ authenticated: false, user: null });
 };
+
