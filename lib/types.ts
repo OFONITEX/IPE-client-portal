@@ -44,6 +44,7 @@ export interface Submission {
   state?: string;
   lga?: string;
   modificationType?: string; // For MODIFICATION: "Name Correction", "Phone Number Update", "Date of Birth", "DOB above 5 years"
+  dobModificationData?: DOBModificationData; // Extended form data for DOB and DOB above 5 years modifications
   additionalNotes?: string;
   
   // Payment info
@@ -66,6 +67,49 @@ export interface Submission {
   // Timestamps
   createdAt: string;
   updatedAt: string;
+}
+
+export interface DOBModificationData {
+  // Old Details
+  oldSurname: string;
+  oldFirstName: string;
+  oldMiddleName: string;
+  oldDateOfBirth: string;
+  oldTown: string;
+  oldState: string;
+  oldLGA: string;
+  oldAddress: string;
+  oldStateOfOrigin: string;
+  oldLGAOfOrigin: string;
+  oldPhoneNumber: string;
+  // New Details
+  newSurname: string;
+  newFirstName: string;
+  newMiddleName: string;
+  newDateOfBirth: string;
+  newTown: string;
+  newState: string;
+  newLGA: string;
+  newAddress: string;
+  newStateOfOrigin: string;
+  newLGAOfOrigin: string;
+  newPhoneNumber: string;
+  // Father Information
+  fatherFirstName: string;
+  fatherSurname: string;
+  fatherTown: string;
+  fatherState: string;
+  fatherLGA: string;
+  // Mother Information
+  motherFirstName: string;
+  motherSurname: string;
+  motherMiddleName: string;
+  motherTown: string;
+  motherState: string;
+  // Tracking
+  trackingId: string;
+  // Passport photo (base64 data URL)
+  passportPhoto?: string;
 }
 
 export interface AdminUser {

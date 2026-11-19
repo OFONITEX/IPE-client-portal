@@ -48,6 +48,7 @@ export const onRequestPost = async (context: any) => {
       lga,
       modificationType,
       additionalNotes,
+      dobModificationData,
     } = body;
 
     if (!serviceType || !identifierCode) {
@@ -90,6 +91,12 @@ export const onRequestPost = async (context: any) => {
     const finalEmail = email?.trim().toLowerCase() || `agent@instantipesubmit.com.ng`;
     const finalPhone = phone?.trim() || `N/A`;
 
+    // If DOB modification data is provided, serialize it into additional_notes as structured JSON
+    let finalNotes = additionalNotes?.trim() || "";
+    if (dobModificationData && typeof dobModificationData === "object") {
+      finalNotes = JSON.stringify({ _type: "DOB_MODIFICATION_FORM", ...dobModificationData });
+    }
+
     const newSubmission: Submission = {
       id: "sub_" + Math.random().toString(36).substring(2, 10),
       trackingId,
@@ -101,7 +108,7 @@ export const onRequestPost = async (context: any) => {
       state: state?.trim() || "",
       lga: lga?.trim() || "",
       modificationType: modificationType?.trim() || "",
-      additionalNotes: additionalNotes?.trim() || "",
+      additionalNotes: finalNotes,
       amount: price,
       paymentStatus: "UNPAID",
       status: "PENDING_PAYMENT",

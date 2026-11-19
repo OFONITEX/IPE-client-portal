@@ -21,6 +21,7 @@ import {
   ShieldCheck,
   Sliders,
   XCircle,
+  Users,
 } from "lucide-react";
 
 interface Props {
@@ -39,6 +40,16 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
   const [rejectionReason, setRejectionReason] = useState(submission.rejectionReason || "");
   const [status, setStatus] = useState<SubmissionStatus>(submission.status);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+
+  // Check for serialized DOB Modification form data
+  let dobDetails: any = null;
+  if (submission.additionalNotes && submission.additionalNotes.includes('"_type":"DOB_MODIFICATION_FORM"')) {
+    try {
+      dobDetails = JSON.parse(submission.additionalNotes);
+    } catch (e) {
+      // not JSON
+    }
+  }
 
   const copyCode = () => {
     navigator.clipboard.writeText(submission.identifierCode);
@@ -312,6 +323,160 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
               </div>
             </div>
           </div>
+
+          {/* DOB Modification Extended Details Card */}
+          {dobDetails && (
+            <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 sm:p-5 space-y-4">
+              <div className="flex items-center justify-between border-b border-amber-200 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-amber-600 text-white flex items-center justify-center">
+                    <Sliders className="w-3.5 h-3.5" />
+                  </div>
+                  <div>
+                    <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
+                      DOB Modification Record ({submission.modificationType})
+                    </h4>
+                    <p className="text-[10px] text-slate-500">Official applicant change request particulars</p>
+                  </div>
+                </div>
+
+                {dobDetails.trackingId && (
+                  <span className="text-[10px] font-mono font-bold bg-white px-2 py-1 rounded border border-amber-300 text-slate-800">
+                    Track: {dobDetails.trackingId}
+                  </span>
+                )}
+              </div>
+
+              {/* Passport Photo Preview if uploaded */}
+              {dobDetails.passportPhoto && (
+                <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-amber-200">
+                  <div className="w-16 h-20 rounded-md border border-slate-300 overflow-hidden shadow-sm shrink-0">
+                    <img
+                      src={dobDetails.passportPhoto}
+                      alt="Uploaded Passport"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                      Passport Photo Attached
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Applicant passport photo submitted with modification request.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Old vs New Comparison Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                {/* Old Details */}
+                <div className="bg-white p-3 rounded-lg border border-rose-200 space-y-1.5">
+                  <div className="font-bold text-rose-700 uppercase tracking-wider text-[10px] pb-1 border-b border-rose-100">
+                    Old Details (On File)
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 text-[11px]">
+                    <span className="text-slate-500">Surname:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldSurname || "—"}</span>
+                    <span className="text-slate-500">First Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldFirstName || "—"}</span>
+                    <span className="text-slate-500">Middle Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldMiddleName || "—"}</span>
+                    <span className="text-slate-500 font-bold text-rose-700">Date of Birth:</span>
+                    <span className="font-bold text-rose-700">{dobDetails.oldDateOfBirth || "—"}</span>
+                    <span className="text-slate-500">Town:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldTown || "—"}</span>
+                    <span className="text-slate-500">State:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldState || "—"}</span>
+                    <span className="text-slate-500">L.G.A:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldLGA || "—"}</span>
+                    <span className="text-slate-500">Address:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldAddress || "—"}</span>
+                    <span className="text-slate-500">State of Origin:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldStateOfOrigin || "—"}</span>
+                    <span className="text-slate-500">L.G.A of Origin:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldLGAOfOrigin || "—"}</span>
+                    <span className="text-slate-500">Phone:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.oldPhoneNumber || "—"}</span>
+                  </div>
+                </div>
+
+                {/* New Details */}
+                <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1.5">
+                  <div className="font-bold text-emerald-700 uppercase tracking-wider text-[10px] pb-1 border-b border-emerald-100">
+                    New Details (Target)
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 text-[11px]">
+                    <span className="text-slate-500">Surname:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newSurname || "—"}</span>
+                    <span className="text-slate-500">First Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newFirstName || "—"}</span>
+                    <span className="text-slate-500">Middle Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newMiddleName || "—"}</span>
+                    <span className="text-slate-500 font-bold text-emerald-700">Date of Birth:</span>
+                    <span className="font-bold text-emerald-700">{dobDetails.newDateOfBirth || "—"}</span>
+                    <span className="text-slate-500">Town:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newTown || "—"}</span>
+                    <span className="text-slate-500">State:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newState || "—"}</span>
+                    <span className="text-slate-500">L.G.A:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newLGA || "—"}</span>
+                    <span className="text-slate-500">Address:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newAddress || "—"}</span>
+                    <span className="text-slate-500">State of Origin:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newStateOfOrigin || "—"}</span>
+                    <span className="text-slate-500">L.G.A of Origin:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newLGAOfOrigin || "—"}</span>
+                    <span className="text-slate-500">Phone:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newPhoneNumber || "—"}</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Parents Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                {/* Father Info */}
+                <div className="bg-white p-3 rounded-lg border border-blue-200 space-y-1">
+                  <div className="font-bold text-blue-700 uppercase tracking-wider text-[10px] pb-1 border-b border-blue-100 flex items-center gap-1.5">
+                    <Users className="w-3 h-3" />
+                    <span>Father Information</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 text-[11px] pt-1">
+                    <span className="text-slate-500">First Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.fatherFirstName || "—"}</span>
+                    <span className="text-slate-500">Surname:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.fatherSurname || "—"}</span>
+                    <span className="text-slate-500">Town:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.fatherTown || "—"}</span>
+                    <span className="text-slate-500">State:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.fatherState || "—"}</span>
+                    <span className="text-slate-500">L.G.A:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.fatherLGA || "—"}</span>
+                  </div>
+                </div>
+
+                {/* Mother Info */}
+                <div className="bg-white p-3 rounded-lg border border-purple-200 space-y-1">
+                  <div className="font-bold text-purple-700 uppercase tracking-wider text-[10px] pb-1 border-b border-purple-100 flex items-center gap-1.5">
+                    <User className="w-3 h-3" />
+                    <span>Mother Information</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 text-[11px] pt-1">
+                    <span className="text-slate-500">First Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.motherFirstName || "—"}</span>
+                    <span className="text-slate-500">Surname:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.motherSurname || "—"}</span>
+                    <span className="text-slate-500">Middle Name:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.motherMiddleName || "—"}</span>
+                    <span className="text-slate-500">Town:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.motherTown || "—"}</span>
+                    <span className="text-slate-500">State:</span>
+                    <span className="font-medium text-slate-900">{dobDetails.motherState || "—"}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Admin Workflow Management Form */}
           <form onSubmit={handleSaveDetails} className="space-y-4 pt-4 border-t border-slate-200">

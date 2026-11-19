@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ServiceType } from "@/lib/types";
+import { ServiceType, DOBModificationData } from "@/lib/types";
 import { SERVICES } from "@/lib/config";
 import { validateServiceCode, formatCurrency } from "@/lib/utils";
 import {
@@ -15,6 +15,10 @@ import {
   ArrowRight,
   Lock,
   Loader2,
+  Upload,
+  Camera,
+  User,
+  Users,
 } from "lucide-react";
 
 interface Props {
@@ -28,6 +32,44 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
   const [selectedService, setSelectedService] = useState<ServiceType>(initialService);
   const [identifierCode, setIdentifierCode] = useState("");
   const [modificationType, setModificationType] = useState("Name Correction");
+
+  // DOB Modification extended form state
+  const emptyDOBData: DOBModificationData = {
+    oldSurname: "", oldFirstName: "", oldMiddleName: "", oldDateOfBirth: "",
+    oldTown: "", oldState: "", oldLGA: "", oldAddress: "",
+    oldStateOfOrigin: "", oldLGAOfOrigin: "", oldPhoneNumber: "",
+    newSurname: "", newFirstName: "", newMiddleName: "", newDateOfBirth: "",
+    newTown: "", newState: "", newLGA: "", newAddress: "",
+    newStateOfOrigin: "", newLGAOfOrigin: "", newPhoneNumber: "",
+    fatherFirstName: "", fatherSurname: "", fatherTown: "", fatherState: "", fatherLGA: "",
+    motherFirstName: "", motherSurname: "", motherMiddleName: "", motherTown: "", motherState: "",
+    trackingId: "", passportPhoto: "",
+  };
+  const [dobData, setDobData] = useState<DOBModificationData>(emptyDOBData);
+  const [photoPreview, setPhotoPreview] = useState<string>("");
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
+  const isDOBType = modificationType === "Date of Birth" || modificationType === "DOB above 5 years";
+
+  const updateDOB = (field: keyof DOBModificationData, value: string) => {
+    setDobData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      setErrorMsg("Passport photo must be under 2 MB.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      setPhotoPreview(result);
+      updateDOB("passportPhoto", result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const [submitting, setSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -75,14 +117,35 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
 
     setSubmitting(true);
     try {
+      const payload: any = {
+        serviceType: selectedService,
+        identifierCode: validation.sanitized,
+        modificationType: selectedService === "MODIFICATION" ? modificationType : undefined,
+      };
+
+      // Attach DOB extended form data if DOB or DOB above 5 years is selected
+      if (selectedService === "MODIFICATION" && isDOBType) {
+        payload.dobModificationData = dobData;
+        const fullName = `${dobData.newSurname} ${dobData.newFirstName} ${dobData.newMiddleName}`.trim() ||
+                         `${dobData.oldSurname} ${dobData.oldFirstName}`.trim();
+        if (fullName) {
+          payload.applicantName = fullName;
+        }
+        if (dobData.newPhoneNumber || dobData.oldPhoneNumber) {
+          payload.phone = dobData.newPhoneNumber || dobData.oldPhoneNumber;
+        }
+        if (dobData.newState || dobData.oldState) {
+          payload.state = dobData.newState || dobData.oldState;
+        }
+        if (dobData.newLGA || dobData.oldLGA) {
+          payload.lga = dobData.newLGA || dobData.oldLGA;
+        }
+      }
+
       const res = await fetch("/api/submissions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          serviceType: selectedService,
-          identifierCode: validation.sanitized,
-          modificationType: selectedService === "MODIFICATION" ? modificationType : undefined,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -390,6 +453,197 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
             </div>
           )}
         </div>
+
+        {/* DOB Modification Extended Form (for Date of Birth & DOB above 5 years) */}
+        {selectedService === "MODIFICATION" && isDOBType && (
+          <div className="bg-amber-50/60 border border-amber-200 rounded-2xl p-5 sm:p-6 space-y-6">
+            <div className="flex items-center gap-2.5 border-b border-amber-200 pb-3">
+              <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-700 flex items-center justify-center">
+                <FileEdit className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-slate-900">DOB Modification Form</h3>
+                <p className="text-[10px] text-slate-500">Complete all fields for {modificationType} processing</p>
+              </div>
+            </div>
+
+            {/* NIN Display (read-only, pulled from above) */}
+            {identifierCode && (
+              <div className="flex items-center gap-2 bg-white px-3 py-2 rounded-lg border border-slate-200">
+                <span className="text-xs font-semibold text-slate-500">NIN:</span>
+                <span className="font-mono font-bold text-slate-900 tracking-wider text-sm">{identifierCode}</span>
+              </div>
+            )}
+
+            {/* OLD DETAILS */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-rose-600 bg-rose-100 px-2 py-0.5 rounded">Old Details</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {([
+                  ["oldSurname", "Surname"],
+                  ["oldFirstName", "First Name"],
+                  ["oldMiddleName", "Middle Name"],
+                  ["oldDateOfBirth", "Date of Birth"],
+                  ["oldTown", "Town"],
+                  ["oldState", "State"],
+                  ["oldLGA", "L.G.A"],
+                  ["oldAddress", "Address"],
+                  ["oldStateOfOrigin", "State of Origin"],
+                  ["oldLGAOfOrigin", "L.G.A of Origin"],
+                  ["oldPhoneNumber", "Phone Number"],
+                ] as [keyof DOBModificationData, string][]).map(([field, label]) => (
+                  <div key={field}>
+                    <label className="block text-[10px] font-semibold text-slate-600 mb-1">{label}</label>
+                    <input
+                      type={field === "oldDateOfBirth" ? "date" : "text"}
+                      value={dobData[field] as string}
+                      onChange={(e) => updateDOB(field, e.target.value)}
+                      placeholder={label}
+                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* NEW DETAILS */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">New Details</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {([
+                  ["newSurname", "Surname"],
+                  ["newFirstName", "First Name"],
+                  ["newMiddleName", "Middle Name"],
+                  ["newDateOfBirth", "Date of Birth"],
+                  ["newTown", "Town"],
+                  ["newState", "State"],
+                  ["newLGA", "L.G.A"],
+                  ["newAddress", "Address"],
+                  ["newStateOfOrigin", "State of Origin"],
+                  ["newLGAOfOrigin", "L.G.A of Origin"],
+                  ["newPhoneNumber", "Phone Number"],
+                ] as [keyof DOBModificationData, string][]).map(([field, label]) => (
+                  <div key={field}>
+                    <label className="block text-[10px] font-semibold text-slate-600 mb-1">{label}</label>
+                    <input
+                      type={field === "newDateOfBirth" ? "date" : "text"}
+                      value={dobData[field] as string}
+                      onChange={(e) => updateDOB(field, e.target.value)}
+                      placeholder={label}
+                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 transition"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* FATHER INFORMATION */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Users className="w-3.5 h-3.5 text-blue-600" />
+                <span className="text-[10px] uppercase font-bold tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded">Father Information</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {([
+                  ["fatherFirstName", "First Name"],
+                  ["fatherSurname", "Surname"],
+                  ["fatherTown", "Town"],
+                  ["fatherState", "State"],
+                  ["fatherLGA", "L.G.A"],
+                ] as [keyof DOBModificationData, string][]).map(([field, label]) => (
+                  <div key={field}>
+                    <label className="block text-[10px] font-semibold text-slate-600 mb-1">{label}</label>
+                    <input
+                      type="text"
+                      value={dobData[field] as string}
+                      onChange={(e) => updateDOB(field, e.target.value)}
+                      placeholder={label}
+                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-400/40 focus:border-blue-400 transition"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* MOTHER INFORMATION */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <User className="w-3.5 h-3.5 text-purple-600" />
+                <span className="text-[10px] uppercase font-bold tracking-wider text-purple-700 bg-purple-100 px-2 py-0.5 rounded">Mother Information</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {([
+                  ["motherFirstName", "First Name"],
+                  ["motherSurname", "Surname"],
+                  ["motherMiddleName", "Middle Name"],
+                  ["motherTown", "Town"],
+                  ["motherState", "State"],
+                ] as [keyof DOBModificationData, string][]).map(([field, label]) => (
+                  <div key={field}>
+                    <label className="block text-[10px] font-semibold text-slate-600 mb-1">{label}</label>
+                    <input
+                      type="text"
+                      value={dobData[field] as string}
+                      onChange={(e) => updateDOB(field, e.target.value)}
+                      placeholder={label}
+                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-purple-400/40 focus:border-purple-400 transition"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* TRACKING ID */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-600 bg-slate-200 px-2 py-0.5 rounded">Tracking ID</span>
+              </div>
+              <input
+                type="text"
+                value={dobData.trackingId}
+                onChange={(e) => updateDOB("trackingId", e.target.value)}
+                placeholder="Enter tracking ID if available"
+                className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 font-mono bg-white focus:outline-none focus:ring-2 focus:ring-slate-400/40 focus:border-slate-400 transition"
+              />
+            </div>
+
+            {/* PASSPORT PHOTO UPLOAD */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-2">
+                <Camera className="w-3.5 h-3.5 text-teal-600" />
+                <span className="text-[10px] uppercase font-bold tracking-wider text-teal-700 bg-teal-100 px-2 py-0.5 rounded">Passport Photograph</span>
+              </div>
+              <div className="flex items-start gap-4">
+                {/* Upload area */}
+                <div
+                  onClick={() => photoInputRef.current?.click()}
+                  className="flex-1 border-2 border-dashed border-slate-300 hover:border-teal-400 rounded-xl p-6 text-center cursor-pointer transition bg-white"
+                >
+                  <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                  <p className="text-xs font-semibold text-slate-700">Click to upload passport photo</p>
+                  <p className="text-[10px] text-slate-400 mt-1">JPG, PNG • Max 2 MB</p>
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                  />
+                </div>
+                {/* Preview */}
+                {photoPreview && (
+                  <div className="w-24 h-28 rounded-xl border-2 border-teal-400 overflow-hidden shadow-md shrink-0">
+                    <img src={photoPreview} alt="Passport" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Error message */}
         {errorMsg && (
