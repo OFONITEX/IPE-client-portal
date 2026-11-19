@@ -23,6 +23,7 @@ import {
   Mail,
   Eye,
   EyeOff,
+  Calendar,
 } from "lucide-react";
 
 interface Props {
@@ -39,15 +40,30 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
 
   // DOB Modification extended form state
   const emptyDOBData: DOBModificationData = {
-    oldSurname: "", oldFirstName: "", oldMiddleName: "", oldDateOfBirth: "",
-    oldTown: "", oldState: "", oldLGA: "", oldAddress: "",
-    oldStateOfOrigin: "", oldLGAOfOrigin: "", oldPhoneNumber: "",
-    newSurname: "", newFirstName: "", newMiddleName: "", newDateOfBirth: "",
-    newTown: "", newState: "", newLGA: "", newAddress: "",
-    newStateOfOrigin: "", newLGAOfOrigin: "", newPhoneNumber: "",
-    fatherFirstName: "", fatherSurname: "", fatherTown: "", fatherState: "", fatherLGA: "",
-    motherFirstName: "", motherSurname: "", motherMiddleName: "", motherTown: "", motherState: "",
-    trackingId: "", passportPhoto: "",
+    oldDateOfBirth: "",
+    newDateOfBirth: "",
+    newSurname: "",
+    newFirstName: "",
+    newMiddleName: "",
+    newTown: "",
+    newState: "",
+    newLGA: "",
+    newAddress: "",
+    newStateOfOrigin: "",
+    newLGAOfOrigin: "",
+    newPhoneNumber: "",
+    fatherFirstName: "",
+    fatherSurname: "",
+    fatherTown: "",
+    fatherState: "",
+    fatherLGA: "",
+    motherFirstName: "",
+    motherSurname: "",
+    motherMiddleName: "",
+    motherTown: "",
+    motherState: "",
+    trackingId: "",
+    passportPhoto: "",
   };
   const [dobData, setDobData] = useState<DOBModificationData>(emptyDOBData);
   const [photoPreview, setPhotoPreview] = useState<string>("");
@@ -161,20 +177,30 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
 
       // Attach DOB extended form data if DOB or DOB above 5 years is selected
       if (selectedService === "MODIFICATION" && isDOBType) {
+        if (!dobData.oldDateOfBirth) {
+          setErrorMsg("Please enter the applicant's Old DOB (current date of birth on record).");
+          setSubmitting(false);
+          return;
+        }
+        if (!dobData.newDateOfBirth) {
+          setErrorMsg("Please enter the applicant's New DOB (requested date of birth).");
+          setSubmitting(false);
+          return;
+        }
+
         payload.dobModificationData = dobData;
-        const fullName = `${dobData.newSurname} ${dobData.newFirstName} ${dobData.newMiddleName}`.trim() ||
-                         `${dobData.oldSurname} ${dobData.oldFirstName}`.trim();
+        const fullName = `${dobData.newSurname} ${dobData.newFirstName} ${dobData.newMiddleName}`.trim();
         if (fullName) {
           payload.applicantName = fullName;
         }
-        if (dobData.newPhoneNumber || dobData.oldPhoneNumber) {
-          payload.phone = dobData.newPhoneNumber || dobData.oldPhoneNumber;
+        if (dobData.newPhoneNumber) {
+          payload.phone = dobData.newPhoneNumber;
         }
-        if (dobData.newState || dobData.oldState) {
-          payload.state = dobData.newState || dobData.oldState;
+        if (dobData.newState) {
+          payload.state = dobData.newState;
         }
-        if (dobData.newLGA || dobData.oldLGA) {
-          payload.lga = dobData.newLGA || dobData.oldLGA;
+        if (dobData.newLGA) {
+          payload.lga = dobData.newLGA;
         }
       }
 
@@ -834,50 +860,83 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </div>
             )}
 
-            {/* OLD DETAILS */}
-            <div className="space-y-3">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-rose-600 bg-rose-100 px-2 py-0.5 rounded">Old Details</span>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                {([
-                  ["oldSurname", "Surname"],
-                  ["oldFirstName", "First Name"],
-                  ["oldMiddleName", "Middle Name"],
-                  ["oldDateOfBirth", "Date of Birth"],
-                  ["oldTown", "Town"],
-                  ["oldState", "State"],
-                  ["oldLGA", "L.G.A"],
-                  ["oldAddress", "Address"],
-                  ["oldStateOfOrigin", "State of Origin"],
-                  ["oldLGAOfOrigin", "L.G.A of Origin"],
-                  ["oldPhoneNumber", "Phone Number"],
-                ] as [keyof DOBModificationData, string][]).map(([field, label]) => (
-                  <div key={field}>
-                    <label className="block text-[10px] font-semibold text-slate-600 mb-1">{label}</label>
-                    <input
-                      type={field === "oldDateOfBirth" ? "date" : "text"}
-                      value={dobData[field] as string}
-                      onChange={(e) => updateDOB(field, e.target.value)}
-                      placeholder={label}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400/40 focus:border-amber-400 transition"
-                    />
+            {/* DATE OF BIRTH CORRECTION (Old DOB & New DOB) */}
+            <div className="bg-white p-4 sm:p-5 rounded-2xl border border-amber-300 space-y-4 shadow-sm">
+              <div className="flex items-center justify-between border-b border-amber-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center">
+                    <Calendar className="w-4 h-4" />
                   </div>
-                ))}
+                  <div>
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider">
+                      Date of Birth Correction
+                    </h4>
+                    <p className="text-[10px] sm:text-xs text-slate-500">Provide the previous date of birth and your requested correct date of birth</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold text-amber-800 bg-amber-100 px-2.5 py-1 rounded-full uppercase tracking-wider">
+                  DOB Change
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* 1. Old DOB */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+                      <span>Old DOB</span>
+                      <span className="text-rose-500">*</span>
+                    </span>
+                    <span className="text-[10px] text-rose-700 bg-rose-100 px-2 py-0.5 rounded font-medium">
+                      Current on NIN Record
+                    </span>
+                  </label>
+                  <input
+                    type="date"
+                    value={dobData.oldDateOfBirth}
+                    onChange={(e) => updateDOB("oldDateOfBirth", e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/40 focus:border-amber-500 transition"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1">Existing (incorrect) date of birth on your NIN profile.</p>
+                </div>
+
+                {/* 2. New DOB */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                      <span>New DOB</span>
+                      <span className="text-rose-500">*</span>
+                    </span>
+                    <span className="text-[10px] text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded font-medium">
+                      Target New Date
+                    </span>
+                  </label>
+                  <input
+                    type="date"
+                    value={dobData.newDateOfBirth}
+                    onChange={(e) => updateDOB("newDateOfBirth", e.target.value)}
+                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm font-semibold text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/40 focus:border-emerald-500 transition"
+                  />
+                  <p className="text-[11px] text-slate-500 mt-1">Correct date of birth to be updated on NIMC database.</p>
+                </div>
               </div>
             </div>
 
             {/* NEW DETAILS */}
             <div className="space-y-3">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">New Details</span>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                  New Details
+                </span>
+                <span className="text-[10px] text-slate-400">Applicant legal profile particulars</span>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {([
                   ["newSurname", "Surname"],
                   ["newFirstName", "First Name"],
                   ["newMiddleName", "Middle Name"],
-                  ["newDateOfBirth", "Date of Birth"],
                   ["newTown", "Town"],
                   ["newState", "State"],
                   ["newLGA", "L.G.A"],
@@ -889,7 +948,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                   <div key={field}>
                     <label className="block text-[10px] font-semibold text-slate-600 mb-1">{label}</label>
                     <input
-                      type={field === "newDateOfBirth" ? "date" : "text"}
+                      type="text"
                       value={dobData[field] as string}
                       onChange={(e) => updateDOB(field, e.target.value)}
                       placeholder={label}

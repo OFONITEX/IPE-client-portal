@@ -72,23 +72,24 @@ export interface Submission {
 }
 
 export interface DOBModificationData {
-  // Old Details
-  oldSurname: string;
-  oldFirstName: string;
-  oldMiddleName: string;
+  // Date of Birth fields
   oldDateOfBirth: string;
-  oldTown: string;
-  oldState: string;
-  oldLGA: string;
-  oldAddress: string;
-  oldStateOfOrigin: string;
-  oldLGAOfOrigin: string;
-  oldPhoneNumber: string;
+  newDateOfBirth: string;
+  // Legacy Old Details (optional)
+  oldSurname?: string;
+  oldFirstName?: string;
+  oldMiddleName?: string;
+  oldTown?: string;
+  oldState?: string;
+  oldLGA?: string;
+  oldAddress?: string;
+  oldStateOfOrigin?: string;
+  oldLGAOfOrigin?: string;
+  oldPhoneNumber?: string;
   // New Details
   newSurname: string;
   newFirstName: string;
   newMiddleName: string;
-  newDateOfBirth: string;
   newTown: string;
   newState: string;
   newLGA: string;

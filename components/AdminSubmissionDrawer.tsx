@@ -23,6 +23,7 @@ import {
   XCircle,
   Users,
   Camera,
+  Calendar,
 } from "lucide-react";
 
 interface Props {
@@ -596,67 +597,85 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                 </div>
               )}
 
-              {/* Old vs New Comparison Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                {/* Old Details */}
-                <div className="bg-white p-3 rounded-lg border border-rose-200 space-y-1.5">
-                  <div className="font-bold text-rose-700 uppercase tracking-wider text-[10px] pb-1 border-b border-rose-100">
-                    Old Details (On File)
+              {/* DOB Change Record (Old DOB vs New DOB) */}
+              <div className="bg-white p-4 rounded-xl border border-amber-300 space-y-3">
+                <div className="flex items-center justify-between border-b border-amber-100 pb-2">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4 text-amber-600" />
+                    <span className="text-xs uppercase font-bold tracking-wider text-slate-900">
+                      Date of Birth Modification
+                    </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-1 text-[11px]">
-                    <span className="text-slate-500">Surname:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldSurname || "—"}</span>
-                    <span className="text-slate-500">First Name:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldFirstName || "—"}</span>
-                    <span className="text-slate-500">Middle Name:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldMiddleName || "—"}</span>
-                    <span className="text-slate-500 font-bold text-rose-700">Date of Birth:</span>
-                    <span className="font-bold text-rose-700">{dobDetails.oldDateOfBirth || "—"}</span>
-                    <span className="text-slate-500">Town:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldTown || "—"}</span>
-                    <span className="text-slate-500">State:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldState || "—"}</span>
-                    <span className="text-slate-500">L.G.A:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldLGA || "—"}</span>
-                    <span className="text-slate-500">Address:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldAddress || "—"}</span>
-                    <span className="text-slate-500">State of Origin:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldStateOfOrigin || "—"}</span>
-                    <span className="text-slate-500">L.G.A of Origin:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldLGAOfOrigin || "—"}</span>
-                    <span className="text-slate-500">Phone:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.oldPhoneNumber || "—"}</span>
-                  </div>
+                  <span className="text-[10px] font-mono font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
+                    DOB Record
+                  </span>
                 </div>
 
-                {/* New Details */}
-                <div className="bg-white p-3 rounded-lg border border-emerald-200 space-y-1.5">
-                  <div className="font-bold text-emerald-700 uppercase tracking-wider text-[10px] pb-1 border-b border-emerald-100">
-                    New Details (Target)
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  {/* Old DOB */}
+                  <div className="bg-rose-50/60 p-3 rounded-lg border border-rose-200 space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-rose-700 block">Old DOB (On Record)</span>
+                    <span className="font-mono font-bold text-rose-900 text-sm">
+                      {dobDetails.oldDateOfBirth || "—"}
+                    </span>
                   </div>
-                  <div className="grid grid-cols-2 gap-1 text-[11px]">
-                    <span className="text-slate-500">Surname:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newSurname || "—"}</span>
-                    <span className="text-slate-500">First Name:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newFirstName || "—"}</span>
-                    <span className="text-slate-500">Middle Name:</span>
+
+                  {/* New DOB */}
+                  <div className="bg-emerald-50/60 p-3 rounded-lg border border-emerald-200 space-y-1">
+                    <span className="text-[10px] uppercase font-bold text-emerald-700 block">New DOB (Requested Target)</span>
+                    <span className="font-mono font-bold text-emerald-900 text-sm">
+                      {dobDetails.newDateOfBirth || "—"}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* New Details (Applicant Profile) */}
+              <div className="bg-white p-4 rounded-xl border border-emerald-200 space-y-2 text-xs">
+                <div className="font-bold text-emerald-700 uppercase tracking-wider text-[10px] pb-1 border-b border-emerald-100 flex items-center justify-between">
+                  <span>Applicant New Details</span>
+                  <span className="text-[10px] text-slate-400 font-normal">Legal profile particulars</span>
+                </div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] pt-1">
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Surname</span>
+                    <span className="font-bold text-slate-900">{dobDetails.newSurname || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">First Name</span>
+                    <span className="font-bold text-slate-900">{dobDetails.newFirstName || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Middle Name</span>
                     <span className="font-medium text-slate-900">{dobDetails.newMiddleName || "—"}</span>
-                    <span className="text-slate-500 font-bold text-emerald-700">Date of Birth:</span>
-                    <span className="font-bold text-emerald-700">{dobDetails.newDateOfBirth || "—"}</span>
-                    <span className="text-slate-500">Town:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newTown || "—"}</span>
-                    <span className="text-slate-500">State:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newState || "—"}</span>
-                    <span className="text-slate-500">L.G.A:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newLGA || "—"}</span>
-                    <span className="text-slate-500">Address:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newAddress || "—"}</span>
-                    <span className="text-slate-500">State of Origin:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newStateOfOrigin || "—"}</span>
-                    <span className="text-slate-500">L.G.A of Origin:</span>
-                    <span className="font-medium text-slate-900">{dobDetails.newLGAOfOrigin || "—"}</span>
-                    <span className="text-slate-500">Phone:</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Phone Number</span>
                     <span className="font-medium text-slate-900">{dobDetails.newPhoneNumber || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">Town</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newTown || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">State</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newState || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">L.G.A</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newLGA || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">State of Origin</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newStateOfOrigin || "—"}</span>
+                  </div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px]">L.G.A of Origin</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newLGAOfOrigin || "—"}</span>
+                  </div>
+                  <div className="sm:col-span-3">
+                    <span className="text-slate-400 block text-[10px]">Residential Address</span>
+                    <span className="font-medium text-slate-900">{dobDetails.newAddress || "—"}</span>
                   </div>
                 </div>
               </div>
