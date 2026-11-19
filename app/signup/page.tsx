@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 
-export default function SignupPage() {
+function SignupFormContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
@@ -281,6 +281,20 @@ export default function SignupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+          <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
+        </div>
+      }
+    >
+      <SignupFormContent />
+    </React.Suspense>
   );
 }
 
