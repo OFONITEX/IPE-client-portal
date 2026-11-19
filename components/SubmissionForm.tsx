@@ -52,6 +52,8 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
   const [dobData, setDobData] = useState<DOBModificationData>(emptyDOBData);
   const [photoPreview, setPhotoPreview] = useState<string>("");
   const photoInputRef = useRef<HTMLInputElement>(null);
+  const namePhotoRef = useRef<HTMLInputElement>(null);
+  const phonePhotoRef = useRef<HTMLInputElement>(null);
 
   const isDOBType = modificationType === "Date of Birth" || modificationType === "DOB above 5 years";
   const isPhoneType = modificationType === "Phone Number Update";
@@ -64,24 +66,22 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
     newFirstName: "",
     newMiddleName: "",
     newEmail: "",
-    emailPassword: "",
+    passportPhoto: "",
   });
-  const [showNameEmailPassword, setShowNameEmailPassword] = useState(false);
 
   // Phone Number Modification state
   const [phoneData, setPhoneData] = useState<PhoneModificationData>({
     nin: "",
     newPhoneNumber: "",
     newEmail: "",
-    emailPassword: "",
+    passportPhoto: "",
   });
-  const [showEmailPassword, setShowEmailPassword] = useState(false);
 
   const updateDOB = (field: keyof DOBModificationData, value: string) => {
     setDobData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>, target: "name" | "phone" | "dob" = "dob") => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
@@ -92,7 +92,9 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
     reader.onload = () => {
       const result = reader.result as string;
       setPhotoPreview(result);
-      updateDOB("passportPhoto", result);
+      if (target === "name") setNameData((prev) => ({ ...prev, passportPhoto: result }));
+      if (target === "phone") setPhoneData((prev) => ({ ...prev, passportPhoto: result }));
+      if (target === "dob") updateDOB("passportPhoto", result);
     };
     reader.readAsDataURL(file);
   };
@@ -193,11 +195,6 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
           setSubmitting(false);
           return;
         }
-        if (!nameData.emailPassword.trim()) {
-          setErrorMsg("Please enter the password for the new email.");
-          setSubmitting(false);
-          return;
-        }
 
         payload.nameModificationData = {
           nin: validation.sanitized,
@@ -205,7 +202,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
           newFirstName: nameData.newFirstName.trim(),
           newMiddleName: nameData.newMiddleName.trim(),
           newEmail: nameData.newEmail.trim(),
-          emailPassword: nameData.emailPassword.trim(),
+          passportPhoto: nameData.passportPhoto || "",
         };
         const fullName = `${nameData.newSurname.trim()} ${nameData.newFirstName.trim()} ${nameData.newMiddleName.trim()}`.trim();
         payload.applicantName = fullName;
@@ -224,17 +221,12 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
           setSubmitting(false);
           return;
         }
-        if (!phoneData.emailPassword.trim()) {
-          setErrorMsg("Please enter the password for the new email.");
-          setSubmitting(false);
-          return;
-        }
 
         payload.phoneModificationData = {
           nin: validation.sanitized,
           newPhoneNumber: phoneData.newPhoneNumber.trim(),
           newEmail: phoneData.newEmail.trim(),
-          emailPassword: phoneData.emailPassword.trim(),
+          passportPhoto: phoneData.passportPhoto || "",
         };
         payload.phone = phoneData.newPhoneNumber.trim();
         payload.email = phoneData.newEmail.trim();
@@ -571,7 +563,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                   Name Correction Particulars
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Provide your 11-digit NIN, new legal names, new email, and email password.
+                  Provide your 11-digit NIN, new legal names, new email, and passport photograph.
                 </p>
               </div>
             </div>
@@ -654,7 +646,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
               </div>
 
               {/* 5. New Email */}
-              <div className="sm:col-span-2">
+              <div className="sm:col-span-3">
                 <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center gap-1.5">
                   <Mail className="w-3.5 h-3.5 text-emerald-600" />
                   <span>New Email Address</span>
@@ -670,31 +662,35 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 <p className="text-[11px] text-slate-500 mt-1">Active email to be linked for update records.</p>
               </div>
 
-              {/* 6. Email Password */}
-              <div className="sm:col-span-1">
-                <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <Lock className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Email Password</span>
-                    <span className="text-rose-500">*</span>
+              {/* 6. Passport Photo Upload */}
+              <div className="sm:col-span-3 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Camera className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">
+                    Passport Photograph
                   </span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showNameEmailPassword ? "text" : "password"}
-                    value={nameData.emailPassword}
-                    onChange={(e) => setNameData((prev) => ({ ...prev, emailPassword: e.target.value }))}
-                    placeholder="Enter password"
-                    className="w-full pl-4 pr-11 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNameEmailPassword(!showNameEmailPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
-                    title={showNameEmailPassword ? "Hide password" : "Show password"}
+                </div>
+                <div className="flex items-start gap-4">
+                  <div
+                    onClick={() => namePhotoRef.current?.click()}
+                    className="flex-1 border-2 border-dashed border-emerald-300 hover:border-emerald-500 rounded-xl p-5 text-center cursor-pointer transition bg-white/80 hover:bg-white"
                   >
-                    {showNameEmailPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
+                    <Upload className="w-7 h-7 text-emerald-500 mx-auto mb-1.5" />
+                    <p className="text-xs font-semibold text-slate-700">Click to upload passport photo</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">JPG, PNG • Max 2 MB</p>
+                    <input
+                      ref={namePhotoRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={(e) => handlePhotoUpload(e, "name")}
+                      className="hidden"
+                    />
+                  </div>
+                  {nameData.passportPhoto && (
+                    <div className="w-20 h-24 sm:w-24 sm:h-28 rounded-xl border-2 border-emerald-500 overflow-hidden shadow-md shrink-0 bg-white">
+                      <img src={nameData.passportPhoto} alt="Passport Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -713,7 +709,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                   Phone Number Correction Details
                 </h3>
                 <p className="text-xs text-slate-500">
-                  Please provide your 11-digit NIN, new phone number, new email, and email password.
+                  Please provide your 11-digit NIN, new phone number, new email, and passport photograph.
                 </p>
               </div>
             </div>
@@ -782,38 +778,36 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
                 <p className="text-[11px] text-slate-500 mt-1">Active email to be linked for verification.</p>
               </div>
 
-              {/* 4. Email Password */}
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-800 mb-1 flex items-center justify-between">
-                  <span className="flex items-center gap-1.5">
-                    <Lock className="w-3.5 h-3.5 text-blue-600" />
-                    <span>Email Password</span>
-                    <span className="text-rose-500">*</span>
+              {/* 4. Passport Photograph */}
+              <div className="sm:col-span-2 space-y-2">
+                <div className="flex items-center gap-2">
+                  <Camera className="w-3.5 h-3.5 text-blue-600" />
+                  <span className="text-[10px] uppercase font-bold tracking-wider text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
+                    Passport Photograph
                   </span>
-                  <span className="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded font-medium">
-                    Required for email sync & verification
-                  </span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showEmailPassword ? "text" : "password"}
-                    value={phoneData.emailPassword}
-                    onChange={(e) => setPhoneData((prev) => ({ ...prev, emailPassword: e.target.value }))}
-                    placeholder="Enter password for the new email address"
-                    className="w-full pl-4 pr-11 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-900 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowEmailPassword(!showEmailPassword)}
-                    className="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600"
-                    title={showEmailPassword ? "Hide password" : "Show password"}
-                  >
-                    {showEmailPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
                 </div>
-                <p className="text-[11px] text-slate-500 mt-1">
-                  Password for the new email to enable verification code authorization.
-                </p>
+                <div className="flex items-start gap-4">
+                  <div
+                    onClick={() => phonePhotoRef.current?.click()}
+                    className="flex-1 border-2 border-dashed border-blue-300 hover:border-blue-500 rounded-xl p-5 text-center cursor-pointer transition bg-white/80 hover:bg-white"
+                  >
+                    <Upload className="w-7 h-7 text-blue-500 mx-auto mb-1.5" />
+                    <p className="text-xs font-semibold text-slate-700">Click to upload passport photo</p>
+                    <p className="text-[10px] text-slate-400 mt-0.5">JPG, PNG • Max 2 MB</p>
+                    <input
+                      ref={phonePhotoRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      onChange={(e) => handlePhotoUpload(e, "phone")}
+                      className="hidden"
+                    />
+                  </div>
+                  {phoneData.passportPhoto && (
+                    <div className="w-20 h-24 sm:w-24 sm:h-28 rounded-xl border-2 border-blue-500 overflow-hidden shadow-md shrink-0 bg-white">
+                      <img src={phoneData.passportPhoto} alt="Passport Preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

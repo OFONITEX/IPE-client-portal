@@ -22,9 +22,7 @@ import {
   Sliders,
   XCircle,
   Users,
-  Lock,
-  Eye,
-  EyeOff,
+  Camera,
 } from "lucide-react";
 
 interface Props {
@@ -73,9 +71,6 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
       // not JSON
     }
   }
-
-  const [showAdminEmailPassword, setShowAdminEmailPassword] = useState(false);
-  const [showAdminNamePassword, setShowAdminNamePassword] = useState(false);
 
   const copyCode = () => {
     navigator.clipboard.writeText(submission.identifierCode);
@@ -362,7 +357,7 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                     <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                       Name Correction Record
                     </h4>
-                    <p className="text-[10px] text-slate-500">Applicant legal names & email credentials</p>
+                    <p className="text-[10px] text-slate-500">Applicant legal names & identity particulars</p>
                   </div>
                 </div>
 
@@ -370,6 +365,27 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                   Name Update
                 </span>
               </div>
+
+              {/* Passport Photo Preview if uploaded */}
+              {nameDetails.passportPhoto && (
+                <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-emerald-200">
+                  <div className="w-16 h-20 rounded-md border border-slate-300 overflow-hidden shadow-sm shrink-0">
+                    <img
+                      src={nameDetails.passportPhoto}
+                      alt="Uploaded Passport"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-teal-700 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                      Passport Photo Attached
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Applicant passport photograph submitted with name correction request.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {/* 1. NIN Number */}
@@ -410,7 +426,7 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                 </div>
 
                 {/* 3. New Email */}
-                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 sm:col-span-2">
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">New Email</span>
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-semibold text-slate-900 text-xs truncate">
@@ -426,36 +442,6 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                         <Copy className="w-3.5 h-3.5" />
                       </button>
                     )}
-                  </div>
-                </div>
-
-                {/* 4. Email Password */}
-                <div className="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-amber-700 block">Email Password</span>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono font-bold text-slate-900 text-xs">
-                      {showAdminNamePassword ? nameDetails.emailPassword || "—" : "••••••••••••"}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowAdminNamePassword(!showAdminNamePassword)}
-                        className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
-                        title={showAdminNamePassword ? "Hide password" : "Show password"}
-                      >
-                        {showAdminNamePassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      </button>
-                      {nameDetails.emailPassword && (
-                        <button
-                          type="button"
-                          onClick={() => navigator.clipboard.writeText(nameDetails.emailPassword)}
-                          className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
-                          title="Copy Password"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -474,7 +460,7 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                     <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider">
                       Phone Number Correction Record
                     </h4>
-                    <p className="text-[10px] text-slate-500">Applicant SIM & email particulars for update</p>
+                    <p className="text-[10px] text-slate-500">Applicant SIM & identity particulars for update</p>
                   </div>
                 </div>
 
@@ -483,9 +469,30 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                 </span>
               </div>
 
+              {/* Passport Photo Preview if uploaded */}
+              {phoneDetails.passportPhoto && (
+                <div className="flex items-center gap-3 bg-white p-3 rounded-lg border border-blue-200">
+                  <div className="w-16 h-20 rounded-md border border-slate-300 overflow-hidden shadow-sm shrink-0">
+                    <img
+                      src={phoneDetails.passportPhoto}
+                      alt="Uploaded Passport"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
+                      Passport Photo Attached
+                    </span>
+                    <p className="text-xs text-slate-600 mt-1">
+                      Applicant passport photograph submitted with phone update request.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
                 {/* 1. NIN Number */}
-                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1">
+                <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1 sm:col-span-2">
                   <span className="text-[10px] uppercase font-bold text-slate-500 block">NIN Number</span>
                   <div className="flex items-center justify-between">
                     <span className="font-mono font-bold text-slate-900 text-sm">
@@ -539,36 +546,6 @@ export function AdminSubmissionDrawer({ submission, onClose, onUpdate }: Props) 
                         <Copy className="w-3.5 h-3.5" />
                       </button>
                     )}
-                  </div>
-                </div>
-
-                {/* 4. Email Password */}
-                <div className="bg-white p-3 rounded-lg border border-amber-200 space-y-1">
-                  <span className="text-[10px] uppercase font-bold text-amber-700 block">Email Password</span>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono font-bold text-slate-900 text-xs">
-                      {showAdminEmailPassword ? phoneDetails.emailPassword || "—" : "••••••••••••"}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <button
-                        type="button"
-                        onClick={() => setShowAdminEmailPassword(!showAdminEmailPassword)}
-                        className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
-                        title={showAdminEmailPassword ? "Hide password" : "Show password"}
-                      >
-                        {showAdminEmailPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      </button>
-                      {phoneDetails.emailPassword && (
-                        <button
-                          type="button"
-                          onClick={() => navigator.clipboard.writeText(phoneDetails.emailPassword)}
-                          className="p-1 hover:bg-amber-50 rounded text-amber-700 shrink-0"
-                          title="Copy Password"
-                        >
-                          <Copy className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>

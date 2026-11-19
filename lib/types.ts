@@ -118,7 +118,8 @@ export interface PhoneModificationData {
   nin: string;
   newPhoneNumber: string;
   newEmail: string;
-  emailPassword: string;
+  emailPassword?: string;
+  passportPhoto?: string;
 }
 
 export interface NameModificationData {
@@ -127,7 +128,8 @@ export interface NameModificationData {
   newFirstName: string;
   newMiddleName: string;
   newEmail: string;
-  emailPassword: string;
+  emailPassword?: string;
+  passportPhoto?: string;
 }
 
 export interface AdminUser {
