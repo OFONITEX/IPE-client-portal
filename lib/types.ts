@@ -41,6 +41,7 @@ export interface Submission {
   applicantName: string;
   email: string;
   phone: string;
+  userId?: string;
   state?: string;
   lga?: string;
   modificationType?: string; // For MODIFICATION: "Name Correction", "Phone Number Update", "Date of Birth", "DOB above 5 years"
@@ -131,6 +132,18 @@ export interface NameModificationData {
   newEmail: string;
   emailPassword?: string;
   passportPhoto?: string;
+}
+
+export interface PortalUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface StoredUser extends PortalUser {
+  password: string;
 }
 
 export interface AdminUser {

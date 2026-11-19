@@ -25,6 +25,7 @@ import {
   EyeOff,
   Calendar,
 } from "lucide-react";
+import { useAuth } from "@/lib/auth";
 
 interface Props {
   initialService?: ServiceType;
@@ -33,6 +34,7 @@ interface Props {
 export function SubmissionForm({ initialService = "IPE" }: Props) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { user } = useAuth();
 
   const [selectedService, setSelectedService] = useState<ServiceType>(initialService);
   const [identifierCode, setIdentifierCode] = useState("");
@@ -167,9 +169,19 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
       return;
     }
 
+    if (!user) {
+      setErrorMsg("Please sign in or create an account to proceed with your submission.");
+      router.push("/login?redirect=/");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const payload: any = {
+        userId: user.id,
+        userEmail: user.email,
+        applicantName: `${user.firstName} ${user.lastName}`,
+        email: user.email,
         serviceType: selectedService,
         identifierCode: validation.sanitized,
         modificationType: selectedService === "MODIFICATION" ? modificationType : undefined,
@@ -295,7 +307,7 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
   return (
     <div className="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
       {/* Agent Header bar */}
-      <div className="bg-slate-900 text-white px-5 py-4 sm:px-6 flex items-center justify-between border-b border-slate-800">
+      <div className="bg-slate-900 text-white px-5 py-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 border-b border-slate-800">
         <div className="flex items-center gap-2.5">
           <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
           <div>
@@ -305,15 +317,78 @@ export function SubmissionForm({ initialService = "IPE" }: Props) {
             <p className="text-xs text-slate-400">instantipesubmit.com.ng • Fast-track clearance & validation</p>
           </div>
         </div>
-        <div className="text-right">
-          <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-semibold">Service Fee</span>
-          <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
-            {formatCurrency(currentPrice)}
-          </p>
+
+        <div className="flex items-center gap-4">
+          {user ? (
+            <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800 border border-slate-700 text-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span className="text-slate-300">Signed in as:</span>
+              <span className="font-bold text-white">{user.firstName} {user.lastName}</span>
+            </div>
+          ) : (
+            <div className="hidden sm:flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => router.push("/login?redirect=/")}
+                className="px-3 py-1.5 text-xs font-semibold text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg transition"
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/signup?redirect=/")}
+                className="px-3 py-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-lg transition"
+              >
+                Sign Up
+              </button>
+            </div>
+          )}
+
+          <div className="text-right">
+            <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-semibold">Service Fee</span>
+            <p className="text-xl sm:text-2xl font-black text-emerald-400 font-mono">
+              {formatCurrency(currentPrice)}
+            </p>
+          </div>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-8">
+        {/* Unauthenticated User Warning / Quick Login Banner */}
+        {!user && (
+          <div className="bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 border border-emerald-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 shadow-sm">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+                <User className="w-5 h-5" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">
+                  User Account Required to Submit
+                </h4>
+                <p className="text-xs text-slate-600 mt-0.5">
+                  Sign in or create an account with your name, email, and password to process and track this submission.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => router.push("/login?redirect=/")}
+                className="px-3.5 py-2 text-xs font-bold text-slate-700 bg-white border border-slate-300 hover:bg-slate-50 rounded-xl transition shadow-sm"
+              >
+                Sign In
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/signup?redirect=/")}
+                className="px-3.5 py-2 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition shadow-sm"
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+        )}
         {/* Service Selector Grid (5 Services) */}
         <div>
           <label className="block text-sm font-semibold text-slate-900 mb-3">
