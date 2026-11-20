@@ -1,4 +1,4 @@
-import { getSupabaseClient } from "../../lib/supabase";
+import { getSupabaseClient } from "../../../lib/supabase";
 
 export const onRequestPost = async (context: any) => {
   try {
