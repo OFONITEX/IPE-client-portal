@@ -76,3 +76,4 @@ When switching to production:
 4. Set URLs:
    - **Callback URL**: `https://instantipesubmit.com.ng/success/`
    - **Webhook URL**: `https://instantipesubmit.com.ng/api/pay/verify`
+

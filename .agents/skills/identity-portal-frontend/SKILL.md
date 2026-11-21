@@ -90,3 +90,4 @@ if (Test-Path "out") { Remove-Item -Recurse -Force "out" }
 npm.cmd run build
 ```
 Verify that `out/` contains `index.html`, `404.html`, `_redirects`, and static folders for all routes.
+

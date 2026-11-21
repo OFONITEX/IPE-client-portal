@@ -74,3 +74,4 @@ To apply the complete schema:
    ```powershell
    node .agents/skills/identity-portal-builder/scripts/verify.js
    ```
+

@@ -64,3 +64,4 @@ functions/api/
 ### 4. Admin Session Authentication (`functions/api/admin/auth.ts`)
 - Uses `context.env.ADMIN_EMAIL` and `context.env.ADMIN_PASSWORD` (falling back to secure defaults).
 - Issues an `HttpOnly`, `SameSite=Lax` session cookie `identity_admin_session=authenticated_session_valid` with 7-day TTL.
+
