@@ -31,9 +31,6 @@ export function Navbar() {
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="font-semibold text-emerald-400">instantipesubmit.com.ng</span>
-            <span className="text-slate-600">•</span>
-            <span className="font-medium text-slate-200">Official National Identity Clearance Portal</span>
-            <span className="hidden sm:inline text-slate-400">• Standardized 256-Bit SSL Encrypted</span>
           </div>
           <div className="flex items-center gap-4 text-slate-300">
             <span className="flex items-center gap-1">
