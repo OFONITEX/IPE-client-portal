@@ -74,3 +74,4 @@ CREATE TABLE IF NOT EXISTS ipe_users (
 );
 
 CREATE INDEX IF NOT EXISTS idx_ipe_users_email ON ipe_users(email);
+
