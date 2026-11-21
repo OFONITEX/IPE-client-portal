@@ -61,7 +61,7 @@ export async function generateTOTP(secret: string = DEFAULT_TOTP_SECRET, timeSte
   const view = new DataView(buffer);
   view.setUint32(4, step, false);
 
-  const cryptoObj = typeof crypto !== "undefined" ? crypto : (await import("crypto")).webcrypto;
+  const cryptoObj = globalThis.crypto;
   const cryptoKey = await (cryptoObj.subtle as any).importKey(
     "raw",
     keyBytes as any,
@@ -106,7 +106,7 @@ export async function verifyTOTP(
     const epoch = Math.floor(Date.now() / 1000);
     const currentStep = Math.floor(epoch / timeStep);
 
-    const cryptoObj = typeof crypto !== "undefined" ? crypto : (await import("crypto")).webcrypto;
+    const cryptoObj = globalThis.crypto;
     const cryptoKey = await (cryptoObj.subtle as any).importKey(
       "raw",
       keyBytes as any,
