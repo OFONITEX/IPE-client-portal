@@ -10,12 +10,16 @@ export const onRequestPost = async (context: any) => {
       return Response.json({ success: false, message: "Email and password are required" }, { status: 400 });
     }
 
+    const expectedEmail = (context.env?.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL).trim().toLowerCase();
+    const expectedPassword = context.env?.ADMIN_PASSWORD || DEFAULT_ADMIN_PASS;
+
     const inputEmail = email.trim().toLowerCase();
     const isValidEmail =
+      inputEmail === expectedEmail ||
       inputEmail === DEFAULT_ADMIN_EMAIL.toLowerCase() ||
       inputEmail === FALLBACK_ADMIN_EMAIL.toLowerCase();
 
-    if (isValidEmail && password === DEFAULT_ADMIN_PASS) {
+    if (isValidEmail && password === expectedPassword) {
       const response = Response.json({
         success: true,
         message: "Authentication successful",
