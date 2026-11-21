@@ -62,3 +62,16 @@ INSERT INTO ipe_portal_settings (id, rate_ipe, rate_mod_ipe, rate_validation, ra
 VALUES (1, 1000, 2500, 1500, 1500, 2500)
 ON CONFLICT (id) DO NOTHING;
 
+-- 3. Users Table for Client Authentication & Submissions Tracking
+CREATE TABLE IF NOT EXISTS ipe_users (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(150) UNIQUE NOT NULL,
+  password_hash TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_ipe_users_email ON ipe_users(email);
+
+

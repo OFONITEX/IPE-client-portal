@@ -13,6 +13,20 @@ A complete architectural runbook and deployment blueprint for building, modifyin
 
 ---
 
+## 🧩 Modular Step Skills in this Suite
+
+This system is decomposed into 5 dedicated, focused step skills:
+
+| Step Skill | Domain / Focus | Key Responsibilities |
+|---|---|---|
+| [`identity-portal-frontend`](../identity-portal-frontend/SKILL.md) | **Client Tier** | Next.js 14 Static Export, form validation (15-char/11-digit), DOB handling, Suspense boundaries |
+| [`identity-portal-edge-api`](../identity-portal-edge-api/SKILL.md) | **Edge API Tier** | Cloudflare Pages Functions (`functions/api/`), tracking ID generation, PII masking, admin workflow |
+| [`identity-portal-database`](../identity-portal-database/SKILL.md) | **Persistence Tier** | Supabase PostgreSQL schema (`ipe_submissions`, `ipe_portal_settings`, `ipe_users`), edge client |
+| [`identity-portal-paystack`](../identity-portal-paystack/SKILL.md) | **Payments Tier** | Paystack initialization, Kobo conversion, reference generation, verification & simulation |
+| [`identity-portal-deployment`](../identity-portal-deployment/SKILL.md) | **Deployment Tier** | Cloudflare Pages, custom domain (`instantipesubmit.com.ng`), DNS CNAME, environment secrets |
+
+---
+
 ## 🏛️ Architecture Overview
 
 The portal follows the **Hybrid Static-Edge Pattern** designed specifically for Cloudflare Pages:
