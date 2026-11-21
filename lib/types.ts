@@ -175,3 +175,50 @@ export interface PortalSettings {
     testMode: boolean;
   };
 }
+
+export interface ServiceListItem {
+  type: ServiceType;
+  name: string;
+  codeLabel: string;
+  placeholder: string;
+  inputFormat: string;
+}
+
+export const SERVICES_LIST: ServiceListItem[] = [
+  {
+    type: "IPE",
+    name: "Internal Processing Exception (IPE)",
+    codeLabel: "15-Character IPE Code",
+    placeholder: "e.g. IPE829482710492",
+    inputFormat: "15-character alphanumeric",
+  },
+  {
+    type: "MOD_IPE",
+    name: "Modification IPE (Mod IPE)",
+    codeLabel: "15-Character Mod IPE Code",
+    placeholder: "e.g. MOD992018471029",
+    inputFormat: "15-character alphanumeric",
+  },
+  {
+    type: "VALIDATION",
+    name: "NIN Validation",
+    codeLabel: "11-Digit NIN Number",
+    placeholder: "e.g. 10293847561",
+    inputFormat: "11 numeric digits",
+  },
+  {
+    type: "MOD_VALIDATION",
+    name: "Modification Validation",
+    codeLabel: "11-Digit Modified NIN Number",
+    placeholder: "e.g. 10293847561",
+    inputFormat: "11 numeric digits",
+  },
+  {
+    type: "MODIFICATION",
+    name: "NIN Modification",
+    codeLabel: "11-Digit Existing NIN Number",
+    placeholder: "e.g. 10293847561",
+    inputFormat: "11 numeric digits",
+  },
+];
+

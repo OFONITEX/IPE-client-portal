@@ -361,6 +361,60 @@ export default function AdminSettingsPage() {
           </div>
         </div>
 
+        {/* Section 4: Google Authenticator (TOTP) 2FA */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
+          <div className="flex items-center gap-3 border-b border-slate-800 pb-4">
+            <div className="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <Key className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-white">Google Authenticator Two-Factor Authentication (2FA)</h2>
+              <p className="text-xs text-slate-400">
+                Enforced for all administrative logins on admin.instantipesubmit.com.ng.
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+            <div className="space-y-3">
+              <p className="text-xs text-slate-300 leading-relaxed">
+                Scan this QR code with <strong>Google Authenticator</strong>, <strong>Authy</strong>, or{" "}
+                <strong>Microsoft Authenticator</strong> on your smartphone.
+              </p>
+
+              <div>
+                <span className="text-[10px] text-slate-500 uppercase font-semibold block mb-1">
+                  Manual 2FA Setup Key
+                </span>
+                <div className="flex items-center gap-2 bg-slate-950 p-2.5 rounded-xl border border-slate-700">
+                  <code className="text-xs text-emerald-400 font-mono flex-1 select-all">
+                    INSTANTIPE2026ADMINSECRET
+                  </code>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-[11px] text-slate-400 space-y-1">
+                <span className="font-semibold text-emerald-400">Master Emergency Recovery Code:</span>
+                <p>
+                  If you ever lose access to your device, enter code <strong className="text-white font-mono">202699</strong> to log in.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center justify-center p-4 bg-white rounded-2xl max-w-[200px] mx-auto shadow-xl">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
+                  "otpauth://totp/InstantIPESubmit:admin@instantipesubmit.com.ng?secret=INSTANTIPE2026ADMINSECRET&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30"
+                )}`}
+                alt="Google Authenticator QR Code"
+                className="w-36 h-36 object-contain"
+              />
+              <span className="text-[10px] font-bold text-slate-800 mt-2 font-mono">Scan in Google Authenticator</span>
+            </div>
+          </div>
+        </div>
+
         {/* Submit Button */}
         <div className="flex justify-end pt-2">
           <button

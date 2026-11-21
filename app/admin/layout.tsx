@@ -46,8 +46,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <span className="text-xs font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               OPERATOR CONSOLE
             </span>
-            <span className="text-xs text-slate-400 hidden sm:inline font-mono">
-              instantipesubmit.com.ng
+            <span className="text-xs text-emerald-400 hidden sm:inline font-mono font-semibold">
+              admin.instantipesubmit.com.ng
+            </span>
+            <span className="hidden md:inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700">
+              <Shield className="w-3 h-3 text-emerald-400" />
+              2FA Google Authenticator Active
             </span>
           </div>
 
