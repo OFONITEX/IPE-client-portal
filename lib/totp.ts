@@ -147,7 +147,7 @@ export async function verifyTOTP(
  * Generates an otpauth:// URL for Google Authenticator QR codes
  */
 export function getOTPAuthURL(
-  accountName: string = "admin@instantipesubmit.com.ng",
+  accountName: string = "Iniobongunyime34@gmail.com",
   issuer: string = "InstantIPESubmit",
   secret: string = DEFAULT_TOTP_SECRET
 ): string {

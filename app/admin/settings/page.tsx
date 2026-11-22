@@ -405,7 +405,7 @@ export default function AdminSettingsPage() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(
-                  "otpauth://totp/InstantIPESubmit:admin@instantipesubmit.com.ng?secret=INSTANTIPE2026ADMINSECRET&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30"
+                  "otpauth://totp/InstantIPESubmit:Iniobongunyime34@gmail.com?secret=INSTANTIPE2026ADMINSECRET&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30"
                 )}`}
                 alt="Google Authenticator QR Code"
                 className="w-36 h-36 object-contain"

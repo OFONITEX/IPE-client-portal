@@ -22,7 +22,7 @@ import {
 
 export default function AdminLoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("admin@instantipesubmit.com.ng");
+  const [email, setEmail] = useState("Iniobongunyime34@gmail.com");
   const [password, setPassword] = useState("Admin@2026Password!");
   const [authenticatorCode, setAuthenticatorCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
 
   // Setup info
   const secretKey = "INSTANTIPE2026ADMINSECRET";
-  const otpAuthUrl = `otpauth://totp/InstantIPESubmit:admin@instantipesubmit.com.ng?secret=${secretKey}&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30`;
+  const otpAuthUrl = `otpauth://totp/InstantIPESubmit:Iniobongunyime34@gmail.com?secret=${secretKey}&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30`;
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
     otpAuthUrl
   )}`;

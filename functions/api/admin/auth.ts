@@ -1,7 +1,7 @@
 import { verifyTOTP, DEFAULT_TOTP_SECRET } from "../../../lib/totp";
 
-const DEFAULT_ADMIN_EMAIL = "admin@instantipesubmit.com.ng";
-const FALLBACK_ADMIN_EMAIL = "admin@identityhub.ng";
+const DEFAULT_ADMIN_EMAIL = "Iniobongunyime34@gmail.com";
+const FALLBACK_ADMIN_EMAIL = "admin@instantipesubmit.com.ng";
 const DEFAULT_ADMIN_PASS = "Admin@2026Password!";
 
 export const onRequestPost = async (context: any) => {
@@ -26,8 +26,10 @@ export const onRequestPost = async (context: any) => {
     const inputEmail = email.trim().toLowerCase();
     const isValidEmail =
       inputEmail === expectedEmail ||
+      inputEmail === "iniobongunyime34@gmail.com" ||
       inputEmail === DEFAULT_ADMIN_EMAIL.toLowerCase() ||
-      inputEmail === FALLBACK_ADMIN_EMAIL.toLowerCase();
+      inputEmail === FALLBACK_ADMIN_EMAIL.toLowerCase() ||
+      inputEmail === "admin@identityhub.ng";
 
     if (!isValidEmail || password !== expectedPassword) {
       return Response.json({ success: false, message: "Invalid email or password" }, { status: 401 });

@@ -3,7 +3,7 @@ import { DEFAULT_TOTP_SECRET, getOTPAuthURL } from "../../../lib/totp";
 export const onRequestGet = async (context: any) => {
   try {
     const secret = context.env?.ADMIN_TOTP_SECRET || DEFAULT_TOTP_SECRET;
-    const email = context.env?.ADMIN_EMAIL || "admin@instantipesubmit.com.ng";
+    const email = context.env?.ADMIN_EMAIL || "Iniobongunyime34@gmail.com";
     const otpAuthUrl = getOTPAuthURL(email, "InstantIPESubmit", secret);
 
     // Google Chart API QR code for scanning in Google Authenticator
@@ -32,3 +32,4 @@ export const onRequestGet = async (context: any) => {
     return Response.json({ success: false, message: error.message }, { status: 500 });
   }
 };
+

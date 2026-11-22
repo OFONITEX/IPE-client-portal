@@ -55,14 +55,14 @@ The platform operates under a dual-domain topology hosted on Cloudflare's Global
 ## 2. Super Administrator Governance & Google Authenticator (TOTP) Security
 
 ### 2.1 The Protected Super Administrator Identity
-* **Primary Email:** `admin@instantipesubmit.com.ng`
+* **Primary Email:** `Iniobongunyime34@gmail.com` (Fallback alias: `admin@instantipesubmit.com.ng`)
 * **Authority:** Full read/write access to all 5 services, fee overrides, applicant acceptance, slip attachments, and user account management.
 
 ### 2.2 Google Authenticator 2-Factor Authentication (RFC 6238 TOTP)
 All administrative logins strictly enforce 2-Factor Authentication via rotating 6-digit Time-Based One-Time Passwords:
 * **Secret Key:** Stored in `ADMIN_TOTP_SECRET` (default: `INSTANTIPE2026ADMINSECRET`).
 * **Authenticator Compatibility:** Google Authenticator, Authy, Microsoft Authenticator, 1Password.
-* **OTPAuth URI:** `otpauth://totp/InstantIPESubmit:admin@instantipesubmit.com.ng?secret=INSTANTIPE2026ADMINSECRET&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30`
+* **OTPAuth URI:** `otpauth://totp/InstantIPESubmit:Iniobongunyime34@gmail.com?secret=INSTANTIPE2026ADMINSECRET&issuer=InstantIPESubmit&algorithm=SHA1&digits=6&period=30`
 * **Emergency Master Code:** `202699` (allows recovery in case of device replacement or clock drift).
 
 ---
@@ -102,3 +102,4 @@ To route the subdomain `admin.instantipesubmit.com.ng` directly to the admin int
    Under **Custom domains**:
    * Click **Set up a custom domain** ➔ Enter `admin.instantipesubmit.com.ng`.
    * Cloudflare automatically provisions the SSL/TLS certificate and edge routing.
+
