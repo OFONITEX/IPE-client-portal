@@ -3,7 +3,7 @@
  * Routes admin.instantipesubmit.com.ng to /admin/ routes natively at the edge.
  */
 
-export const onRequest: any = async (context: any) => {
+export async function onRequest(context: any) {
   const url = new URL(context.request.url);
   const host = (context.request.headers.get("host") || "").toLowerCase();
 
@@ -28,4 +28,4 @@ export const onRequest: any = async (context: any) => {
   }
 
   return context.next();
-};
+}
