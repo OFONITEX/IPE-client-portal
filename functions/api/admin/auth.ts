@@ -6,17 +6,10 @@ const DEFAULT_ADMIN_PASS = "Admin@2026Password!";
 
 export const onRequestPost = async (context: any) => {
   try {
-    const { email, password, authenticatorCode } = (await context.request.json()) as any;
+    const { email, password, authenticatorCode, step, action } = (await context.request.json()) as any;
 
     if (!email || !password) {
       return Response.json({ success: false, message: "Email and password are required" }, { status: 400 });
-    }
-
-    if (!authenticatorCode) {
-      return Response.json(
-        { success: false, message: "Google Authenticator 6-digit code is required" },
-        { status: 400 }
-      );
     }
 
     const expectedEmail = (context.env?.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL).trim().toLowerCase();
@@ -33,6 +26,22 @@ export const onRequestPost = async (context: any) => {
 
     if (!isValidEmail || password !== expectedPassword) {
       return Response.json({ success: false, message: "Invalid email or password" }, { status: 401 });
+    }
+
+    // Step 1 pre-validation: verify email & password before showing 2FA step
+    if (action === "PRE_VALIDATE" || step === 1) {
+      return Response.json({
+        success: true,
+        message: "Credentials verified. Please enter your Google Authenticator code.",
+        requires2FA: true,
+      });
+    }
+
+    if (!authenticatorCode) {
+      return Response.json(
+        { success: false, message: "Google Authenticator 6-digit code is required" },
+        { status: 400 }
+      );
     }
 
     // Verify Google Authenticator TOTP token
@@ -78,11 +87,11 @@ export const onRequestGet = async (context: any) => {
     authenticated: isAuthenticated,
     admin: isAuthenticated
       ? {
-          email: context.env?.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL,
-          name: "Chief Verification Officer",
-          role: "super_admin",
-          twoFactorVerified: true,
-        }
+        email: context.env?.ADMIN_EMAIL || DEFAULT_ADMIN_EMAIL,
+        name: "Chief Verification Officer",
+        role: "super_admin",
+        twoFactorVerified: true,
+      }
       : null,
   });
 };
